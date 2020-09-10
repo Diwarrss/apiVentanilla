@@ -1,0 +1,7 @@
+models:
+  audit: #radicacion de salida
+    table: string:50
+    action: enum:update,inactive,active
+    info: string:200
+    user_id: id
+

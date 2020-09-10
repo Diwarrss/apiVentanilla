@@ -1,0 +1,20 @@
+created:
+    - database/migrations/2020_07_12_123933_create_audits_table.php
+    - app/audit.php
+    - database/factories/AuditFactory.php
+models:
+    User: {  }
+    TypeIdentification: { name: 'string:50 unique', initials: 'string:5', state: boolean }
+    Gender: { name: 'string:50 unique', initials: 'string:5', state: boolean }
+    People: { identification: 'string:20 unique', names: 'string:100 nullable', surnames: 'string:100 nullable', telephone: 'string:100 nullable', address: 'string:100 nullable', email: 'string:130', state: boolean, type: 'enum:company,person', type_identification_id: id, gender_id: 'id nullable', people_id: 'id nullable' }
+    Dependence: { identification: 'string:20 unique', names: 'string:50 unique', surnames: 'string:100 nullable', telephone: 'string:11 nullable', address: 'string:100 nullable', state: boolean, type: 'enum:dependence,person', attachments: text, dependence_id: 'id comment:''Es el jefe o la persona a cargo''', type_identification_id: 'id nullable', gender_id: 'id nullable' }
+    Priority: { name: 'string:50 unique', initials: 'string:5', state: boolean, days: integer }
+    ContextType: { name: 'string:50 unique', state: boolean }
+    TypeDocument: { name: 'string:50 unique', state: boolean }
+    LegalRepresentative: { document: string, name: 'string:100', phone: 'string:22', address: 'string:100', email: 'string:130' }
+    Company: { name: 'string:100', initials: 'string:8', nit: string, address: 'string:100', phone: 'string:22', image: text, logo: text, state: boolean, type: 'enum:basic,professional,avanced', legal_representative_id: id }
+    Campus: { name: string, initials: string, address: string, telephone: string, state: boolean, company_id: id }
+    UserCampus: { campus_id: id, user_id: id }
+    EntryFiling: { cons_year: integer, year: integer, title: 'string:50', settled: 'string:20', access_level: 'enum:public,restricted', means_document: 'enum:fisic,digital,fisic/digital', folios: integer, subject: text, key_words: 'string:200', attachments: 'text nullable', user_id: id, campus_id: id, priority_id: id, people_id: id, type_document_id: id, context_type_id: id, dependence_id: id }
+    OutgoingFiling: { cons_year: integer, year: integer, title: 'string:50', settled: 'string:20', access_level: 'enum:public,restricted', means_document: 'enum:fisic,digital,fisic/digital', folios: integer, subject: text, key_words: 'string:200', attachments: 'text nullable', user_id: id, campus_id: id, priority_id: id, people_id: id, type_document_id: id, context_type_id: id, dependence_id: id }
+    audit: { table: 'string:50', action: 'enum:update,inactive,active', info: 'string:200', user_id: id }
