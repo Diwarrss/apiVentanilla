@@ -15,7 +15,7 @@ class CreatePrioritiesTable extends Migration
     {
         Schema::create('priorities', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name')->unique();
+            $table->string('name', 200)->unique();
             $table->string('initials', 5)->unique();
             $table->boolean('state');
             $table->integer('days');

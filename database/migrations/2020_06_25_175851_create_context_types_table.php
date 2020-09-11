@@ -15,7 +15,7 @@ class CreateContextTypesTable extends Migration
     {
         Schema::create('context_types', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name')->unique();
+            $table->string('name', 200)->unique();
             $table->string('slug')->nullable();
             $table->boolean('state');
             $table->integer('user_id')->nullable()->comment('Usuario que crea el registro');

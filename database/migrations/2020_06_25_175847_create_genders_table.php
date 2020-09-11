@@ -15,7 +15,7 @@ class CreateGendersTable extends Migration
     {
         Schema::create('genders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name')->unique();
+            $table->string('name', 200)->unique();
             $table->string('initials', 5)->unique();
             $table->boolean('state');
             $table->integer('user_id')->nullable()->comment('Usuario que crea el registro');
