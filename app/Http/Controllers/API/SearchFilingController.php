@@ -16,12 +16,12 @@ class SearchFilingController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
+    {//retorna la información de la base de datos
       if ($request->typeSearch === "1") { //es para el endpoint de mis radicados
         $user = Auth::user()->dependencePerson_id;
         $userDependence = Auth::user()->dependence_id;
         if ($request->type === "0") { //type=0 es para radicacion de entrada
-          if ($request->fromDate && $request->toDate) {
+          if ($request->fromDate && $request->toDate) {//retorna l a información que este en dos rangos de fecha especificos
             return EntryFiling::with(
               'upFiles',
               'dependences',
@@ -30,14 +30,15 @@ class SearchFilingController extends Controller
               'People:id,names',
               'Priority:id,name'
               )
-              ->whereHas('dependences', function($query) use ($user, $userDependence)  {
+              ->whereHas('dependences', function($query) use ($user, $userDependence)  {//condicion en la relación
+                //retorna los radicados que tienen como destinatario al usuario a a la dependencia a la que pertenece
                 $query->where('entry_filing_has_dependences.dependence_id', $user)
                       ->orWhere('entry_filing_has_dependences.dependence_id', $userDependence);
               })
               ->where('state', 1)
               ->whereBetween('created_at', [$request->fromDate, $request->toDate])
               ->get();
-          } else {
+          } else {//retorna l a información que este tenga fecha de hoy
             return EntryFiling::with(
               'upFiles',
               'dependences',
@@ -46,7 +47,8 @@ class SearchFilingController extends Controller
               'People:id,names',
               'Priority:id,name'
               )
-              ->whereHas('dependences', function($query) use ($user, $userDependence)  {
+              ->whereHas('dependences', function($query) use ($user, $userDependence)  {//condicion en la relación
+                //retorna los radicados que tienen como destinatario al usuario a a la dependencia a la que pertenece
                 $query->where('entry_filing_has_dependences.dependence_id', $user)
                       ->orWhere('entry_filing_has_dependences.dependence_id', $userDependence);
               })
@@ -55,7 +57,7 @@ class SearchFilingController extends Controller
               ->get();
           }
         }else if ($request->type === "1") { //type=1 es para radicacion de entrada
-          if ($request->fromDate && $request->toDate) {
+          if ($request->fromDate && $request->toDate) {//retorna l a información que este en dos rangos de fecha especificos
             return OutgoingFiling::with(
               'upFiles',
               'people',
@@ -68,7 +70,7 @@ class SearchFilingController extends Controller
               ->where('dependence_id', $user)
               ->whereBetween('created_at', [$request->fromDate, $request->toDate])
               ->get();
-          } else {
+          } else {//retorna l a información que tenga fecha de hoy
             return OutgoingFiling::with(
               'upFiles',
               'people',
@@ -83,7 +85,7 @@ class SearchFilingController extends Controller
               ->get();
           }
         }
-      } else { //es el endpoint de buscaar radicados
+      } else { //es el endpoint de buscar radicados
         //se crean arrays para hacer condiciones dinamicas
         $matchThese = [];
         $title = [];
@@ -135,7 +137,7 @@ class SearchFilingController extends Controller
               'People:id,names',
               'Priority:id,name'
               )
-              ->whereHas('dependences', function($query) use ($addressee_id)  {
+              ->whereHas('dependences', function($query) use ($addressee_id)  {//condicion de la relacion de las tablas
                 $query->where('entry_filing_has_dependences.dependence_id', $addressee_id);
               })
               ->where($matchThese)
@@ -182,7 +184,7 @@ class SearchFilingController extends Controller
               'dependence:id,names',
               'Priority:id,name'
               )
-              ->whereHas('people', function($query) use ($addressee_id)  {
+              ->whereHas('people', function($query) use ($addressee_id)  {//condicion en una relacion de la base de datos
                 $query->where('outgoing_filing_has_people.people_id', $addressee_id);
               })
               ->where($matchThese)

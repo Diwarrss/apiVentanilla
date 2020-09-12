@@ -19,7 +19,7 @@ class TypeIdentificationController extends Controller
      */
     public function index()
     {
-      return TypeIdentification::all();
+      return TypeIdentification::all();//retorna la información de la base de datos
     }
 
     /**
@@ -29,29 +29,29 @@ class TypeIdentificationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(RequestTypeIdentification $request)
-    {
+    {//Guarda la informacion del nuevo registro
       try {
         DB::beginTransaction();
 
-        $data = $request->all();
+        $data = $request->all();//captura los parametros q vienen en la petición
         $data['user_id'] = Auth::user()->id;/* trae el usuario q esta autenticado */
-        $typeIdentification = TypeIdentification::create($data);
+        $typeIdentification = TypeIdentification::create($data);//Guarda la informacion del registro
         DB::commit();
 
-        if ($typeIdentification) {
+        if ($typeIdentification) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Creado con éxito',
             'data' => $typeIdentification
           ], 202);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al guardar',
             'data' => []
           ], 204);
         }
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al guardar',
@@ -80,14 +80,13 @@ class TypeIdentificationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {//actualiza la infomracion del registro especifico
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
-        $typeIdentification = TypeIdentification::find($id);
+        $typeIdentification = TypeIdentification::find($id);//Busca registro por ID
 
-        //validations
+        //validations->valida que el nombre y las iniciales no esten creadas en la base de datos
         $request->validate([
           'name' => 'required|max:200|unique:Type_identifications,name,' . $id,
           'initials' => 'required|max:5|unique:Type_identifications,initials,' . $id
@@ -103,20 +102,21 @@ class TypeIdentificationController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
+        //actualiza la infomracion del registro especifico
         $typeIdentification->name = $request->name;
         $typeIdentification->initials = $request->initials;
         $typeIdentification->state = $request->state;
-        $typeIdentification->save();
+        $typeIdentification->save();//Guarda la informacion del registro
 
         DB::commit(); //commit de la transaccion
 
-        if ($typeIdentification) {
+        if ($typeIdentification) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $typeIdentification
           ], 202);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
@@ -124,7 +124,7 @@ class TypeIdentificationController extends Controller
           ], 204);
         }
 
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',
@@ -135,12 +135,11 @@ class TypeIdentificationController extends Controller
     }
 
     public function updateState(Request $request, $id)
-    {
+    {//cambiar el estado del registro
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
-        $typeIdentification = TypeIdentification::find($id);
+        $typeIdentification = TypeIdentification::find($id);//Busca registro por ID
 
         //Add data in table audits
         $audit = Audit::create([
@@ -152,18 +151,18 @@ class TypeIdentificationController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
-        $typeIdentification->state = !$typeIdentification->state;
-        $typeIdentification->save();
+        $typeIdentification->state = !$typeIdentification->state;//cambia el estado del registro
+        $typeIdentification->save();//guarda el estado del registro
 
         DB::commit(); //commit de la transaccion
 
-        if ($typeIdentification) {
+        if ($typeIdentification) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $typeIdentification->state
           ], 202);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
@@ -171,7 +170,7 @@ class TypeIdentificationController extends Controller
           ], 204);
         }
 
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',

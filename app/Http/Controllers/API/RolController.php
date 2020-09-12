@@ -16,12 +16,12 @@ class RolController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request  $request)
-    {
+    {//retorna la información de la base de datos
       //return Role::with('permissions')->get();
       if ($request->hasPermissions === 'false') {
-        return Role::all();
+        return Role::all();//retorna toda la información de los roles
       }
-      return Role::with('permissions')->get();
+      return Role::with('permissions')->get();//retorna la infomración de los roles con su respectiva relación con permisos
     }
 
     /**
@@ -41,30 +41,29 @@ class RolController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(RequestRol $request)
-    {
+    {//Guarda la informacion del nuevo registro
       try {
         DB::beginTransaction();
 
-        $data = $request->all();
+        $data = $request->all();//captura los parametros q vienen en la petición
         $data['guard_name'] = 'web';
         $rol = Role::create($data);
         DB::commit(); //commit de la transaccion
 
-        if ($rol) {
+        if ($rol) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Creado con éxito',
             'data' => $rol
           ], 201);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al guardar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al guardar',

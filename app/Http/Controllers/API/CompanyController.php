@@ -15,6 +15,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
+      //retorna la información de la base de datos
         return Company::all();
     }
 

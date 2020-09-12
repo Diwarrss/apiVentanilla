@@ -18,11 +18,11 @@ class PersonController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request  $request)
-    {
-      if ($request->active === 'false') {
+    {//retorna la información de la base de datos
+      if ($request->active === 'false') {//toda la iformación de la abse de datos
         return People::all();
       }
-      return People::where('state', 1)->get();
+      return People::where('state', 1)->get();//retorna la los registros con estado 1 (activos)
     }
 
     /**
@@ -36,26 +36,26 @@ class PersonController extends Controller
       try {
         DB::beginTransaction();
 
-        $data = $request->all();
+        $data = $request->all();//captura los parametros q vienen en la petición
         $data['user_id'] = Auth::user()->id;/* trae el usuario q esta autenticado */
-        $people = People::create($data);
+        $people = People::create($data);//Guarda la informacion del nuevo registro
 
         DB::commit(); //commit de la transaccion
 
-        if ($people) {
+        if ($people) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Creado con éxito',
             'data' => $people
           ], 201);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al guardar',
             'data' => []
           ], 204);
         }
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al guardar',
@@ -84,14 +84,12 @@ class PersonController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {//actualiza la infomracion del registro especifico
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
-        $people = People::find($id);
-
-        //validations
+        $people = People::find($id);//Busca registro por ID
+        //validations->valida q no exista el registro con la misma identificación
         $request->validate([
           'identification' => 'required|max:20|unique:people,identification,' . $id
         ]);
@@ -106,6 +104,7 @@ class PersonController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
+        //actualiza la infomracion del registro especifico
         $people->identification = $request->identification;
         $people->names = $request->names;
         $people->telephone = $request->telephone;
@@ -119,21 +118,20 @@ class PersonController extends Controller
         $people->save();
         DB::commit(); //commit de la transaccion
 
-        if ($people) {
+        if ($people) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $people
           ], 202);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',
@@ -144,12 +142,11 @@ class PersonController extends Controller
     }
 
     public function updateState(Request $request, $id)
-    {
+    {//cambiar el estado del registro
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
-        $people = People::find($id);
+        $people = People::find($id);//Busca registro por ID
 
         //Add data in table audits
         $audit = Audit::create([
@@ -161,26 +158,25 @@ class PersonController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
-        $people->state = !$people->state;
-        $people->save();
+        $people->state = !$people->state;//cambia el estado del registro
+        $people->save();//guarda el estado del registro
 
         DB::commit(); //commit de la transaccion
 
-        if ($people) {
+        if ($people) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $people->state
           ], 202);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',

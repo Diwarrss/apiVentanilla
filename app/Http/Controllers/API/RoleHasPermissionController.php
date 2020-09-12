@@ -36,25 +36,25 @@ class RoleHasPermissionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {//asignar permiso a determinado rol
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
+        //Guarda la informacion del nuevo registro
         $rhp = RolHasPermission::create([
           'role_id' => $request->role_id,
           'permission_id' => $request->permission_id
         ]);
         DB::commit();
 
-        if ($rhp) {
+        if ($rhp) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Permiso Asignado con éxito',
             'notify' => true,
             'data' => $rhp
           ], 202);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al asignar',
@@ -62,7 +62,7 @@ class RoleHasPermissionController extends Controller
             'data' => []
           ], 204);
         }
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al asignar',
@@ -113,28 +113,28 @@ class RoleHasPermissionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
-    {
+    {//eliminar permiso de determinado rol
       try {
         DB::beginTransaction();
 
         $rhp = RolHasPermission::where([['permission_id', $request->permission_id] , ['role_id', $request->role_id]]);
-        $rhp->delete();
+        $rhp->delete();//elimina el permiso  de un rol especifico
         DB::commit();
 
-        if ($rhp) {
+        if ($rhp) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Permiso Eliminado con éxito',
             'data' => $rhp
           ], 202);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al eliminar',
             'data' => []
           ], 204);
         }
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al eliminar',

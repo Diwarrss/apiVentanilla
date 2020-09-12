@@ -19,7 +19,7 @@ class PriorityController extends Controller
      */
     public function index()
     {
-        return Priority::all();
+        return Priority::all();//retorna la información de la base de datos
     }
 
     /**
@@ -29,29 +29,29 @@ class PriorityController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(RequestPriority $request)
-    {
+    {//Guarda la informacion del nuevo registro
       try {
         DB::beginTransaction();
 
-        $data = $request->all();
+        $data = $request->all();//captura los parametros q vienen en la petición
         $data['user_id'] = Auth::user()->id;/* trae el usuario q esta autenticado */
-        $priority = Priority::create($data);
-        DB::commit();
+        $priority = Priority::create($data);//Guarda la informacion del nuevo registro
+        DB::commit();//commit de la transaccion
 
-        if ($priority) {
+        if ($priority) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Creado con éxito',
             'data' => $priority
           ], 202);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al guardar',
             'data' => []
           ], 204);
         }
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al guardar',
@@ -80,14 +80,13 @@ class PriorityController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {//actualiza la infomracion del registro especifico
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
-        $priority = Priority::find($id);
+        $priority = Priority::find($id);//Busca registro por ID
 
-        //validations
+        //validations->valida nombre e iniciales para no repetir por q son datos unicos del registro
         $request->validate([
           'name' => 'required|max:200|unique:priorities,name,' . $id,
           'initials' => 'required|max:5|unique:priorities,initials,' . $id
@@ -103,29 +102,29 @@ class PriorityController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
+        //actualiza la infomracion del registro especifico
         $priority->name = $request->name;
         $priority->initials = $request->initials;
         $priority->state = $request->state;
         $priority->days = $request->days;
-        $priority->save();
+        $priority->save();//Guarda la informacion del registro
 
         DB::commit(); //commit de la transaccion
 
-        if ($priority) {
+        if ($priority) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $priority
           ], 202);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',
@@ -136,12 +135,11 @@ class PriorityController extends Controller
     }
 
     public function updateState(Request $request, $id)
-    {
+    {//cambiar el estado del registro
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
-        $priority = Priority::find($id);
+        $priority = Priority::find($id);//Busca registro por ID
 
         //Add data in table audits
         $audit = Audit::create([
@@ -153,26 +151,25 @@ class PriorityController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
-        $priority->state = !$priority->state;
-        $priority->save();
+        $priority->state = !$priority->state;//cambia el estado del registro
+        $priority->save();//guarda el estado del registro
 
         DB::commit(); //commit de la transaccion
 
-        if ($priority) {
+        if ($priority) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $priority->state
           ], 202);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',

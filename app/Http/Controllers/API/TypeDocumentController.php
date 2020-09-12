@@ -30,31 +30,30 @@ class TypeDocumentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(RequestTypeDocument $request)
-    {
+    {//retorna la información de la base de datos
       try {
         DB::beginTransaction();
 
-        $data = $request->all();
+        $data = $request->all();//captura los parametros q vienen en la petición
         $data['slug'] = Str::slug($request->name,'-');
         $data['user_id'] = Auth::user()->id;/* trae el usuario q esta autenticado */
-        $typeDocument = TypeDocument::create($data);
+        $typeDocument = TypeDocument::create($data);//Guarda la informacion del nuevo registro
         DB::commit(); //commit de la transaccion
 
-        if ($typeDocument) {
+        if ($typeDocument) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Creado con éxito',
             'data' => $typeDocument
           ], 201);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al guardar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al guardar',
@@ -83,13 +82,13 @@ class TypeDocumentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {//actualiza la infomracion del registro especifico
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
-        $typeDocument = TypeDocument::find($id);
+        $typeDocument = TypeDocument::find($id);//captura los parametros q vienen en la petición
 
+        //valida que el nombre no este creado en la base de datos
         $request->validate([
           'name' => 'required|max:100|unique:type_documents,name,' . $id
         ]);
@@ -104,28 +103,28 @@ class TypeDocumentController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
+        //actualiza la infomracion del registro especifico
         $typeDocument->name = $request->name;
         $typeDocument->slug = Str::slug($request->name,'-');
         $typeDocument->state = $request->state;
-        $typeDocument->save();
+        $typeDocument->save();//Guarda la informacion del registro
 
         DB::commit(); //commit de la transaccion
 
-        if ($typeDocument) {
+        if ($typeDocument) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $typeDocument
           ], 202);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',
@@ -136,12 +135,11 @@ class TypeDocumentController extends Controller
     }
 
     public function updateState(Request $request, $id)
-    {
+    {//cambiar el estado del registro
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
-        $typeDocument = TypeDocument::find($id);
+        $typeDocument = TypeDocument::find($id);//Busca registro por ID
 
         //Add data in table audits
         $audit = Audit::create([
@@ -153,18 +151,18 @@ class TypeDocumentController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
-        $typeDocument->state = !$typeDocument->state;
-        $typeDocument->save();
+        $typeDocument->state = !$typeDocument->state;//cambia el estado del registro
+        $typeDocument->save();//guarda el estado del registro
 
         DB::commit(); //commit de la transaccion
 
-        if ($typeDocument) {
+        if ($typeDocument) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $typeDocument->state
           ], 202);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
@@ -172,7 +170,7 @@ class TypeDocumentController extends Controller
           ], 204);
         }
 
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',

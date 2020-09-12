@@ -20,17 +20,16 @@ class DependenceController extends Controller
      */
     public function index(Request  $request)
     {
-        if ($request->active === '0') {
+        //retorna la información de la base de datos
+        if ($request->active === '0') { //retorna toda la informacipon
           return Dependence::all();
-        }else if ($request->active === '1') {
+        }else if ($request->active === '1') { //retorna la información con estado 1->activo
           return Dependence::where('state', 1)->get();
-        }else if ($request->active === '2') {
+        }else if ($request->active === '2') { //retorna toda la información activa y con tipo depencencia
           return Dependence::where([['state', 1 ], [ 'type', 'dependence' ]])->get();
-        }else if ($request->active === '3') {
+        }else if ($request->active === '3') { //retorna toda la información activa y con tipo persona
           return Dependence::where([['state', 1 ], [ 'type', 'person' ]])->get();
         }
-
-        //return Dependence::with('TypeIdentification', 'Gender')->get();
     }
 
     /**
@@ -40,31 +39,32 @@ class DependenceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(RequestDependence $request)
-    {
+    {//Guarda la informacion del nuevo registro
       try {
         DB::beginTransaction();
 
-        $data = $request->all();
+        $data = $request->all();//captura los parametros q vienen en la petición
         $data['slug'] = ($request->type == 'dependence') ? Str::slug($request->names,'-') : null;
         $data['user_id'] = Auth::user()->id;/* trae el usuario q esta autenticado */
+        //Guarda la informacion del nuevo registro
         $dependence = Dependence::create($data);
 
         DB::commit(); //commit de la transaccion
 
-        if ($dependence) {
+        if ($dependence) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Creado con éxito',
             'data' => $dependence
           ], 201);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al guardar',
             'data' => []
           ], 204);
         }
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al guardar',
@@ -95,11 +95,11 @@ class DependenceController extends Controller
     public function update(Request $request, $id)
     {
       try {
+        //actualiza la infomracion del registro especifico
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
-        $dependence = Dependence::find($id);
-        //validations
+        $dependence = Dependence::find($id);//Busca registro por ID
+        //validations->valida q no exista el registro con la misma identificación
         $request->validate([
           'identification' => 'nullable|max:20|unique:dependences,identification,' . $id
         ]);
@@ -114,6 +114,7 @@ class DependenceController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
+        //actualiza la infomracion del registro especifico
         $dependence->identification = $request->identification;
         $dependence->names = $request->names;
         $dependence->slug = ($request->type == 'dependence') ? Str::slug($request->names,'-') : null;
@@ -125,24 +126,24 @@ class DependenceController extends Controller
         $dependence->dependence_id = $request->dependence_id;
         $dependence->type_identification_id = $request->type_identification_id;
         $dependence->gender_id = $request->gender_id;
+        //Guarda la informacion del registro
         $dependence->save();
         DB::commit(); //commit de la transaccion
 
-        if ($dependence) {
+        if ($dependence) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $dependence
           ], 202);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',
@@ -154,10 +155,11 @@ class DependenceController extends Controller
 
     public function updateState(Request $request, $id)
     {
+      //cambiar el estado del registro
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
+        //Busca registro por ID
         $dependence = Dependence::find($id);
 
         //Add data in table audits
@@ -170,26 +172,27 @@ class DependenceController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
+        //cambia el estado del registro
         $dependence->state = !$dependence->state;
+        //guarda el estado del registro
         $dependence->save();
 
         DB::commit(); //commit de la transaccion
 
-        if ($dependence) {
+        if ($dependence) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $dependence->state
           ], 202);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',

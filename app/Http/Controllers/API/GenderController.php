@@ -19,7 +19,7 @@ class GenderController extends Controller
      */
     public function index()
     {
-        return Gender::all();
+        return Gender::all();//retorna la información de la base de datos
     }
 
     /**
@@ -30,28 +30,28 @@ class GenderController extends Controller
      */
     public function store(RequestGender $request)
     {
-      try {
+      try {//Guarda la informacion del nuevo registro
         DB::beginTransaction();
 
-        $data = $request->all();
+        $data = $request->all();//captura los parametros q vienen en la petición
         $data['user_id'] = Auth::user()->id;/* trae el usuario q esta autenticado */
-        $gender = Gender::create($data);
-        DB::commit();
+        $gender = Gender::create($data);//Guarda la informacion del registro
+        DB::commit();//commit de la transaccion
 
-        if ($gender) {
+        if ($gender) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Creado con éxito',
             'data' => $gender
           ], 202);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al guardar',
             'data' => []
           ], 204);
         }
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al guardar',
@@ -80,14 +80,14 @@ class GenderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {//actualiza la infomracion del registro especifico
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
+        //Busca registro por ID
         $gender = Gender::find($id);
 
-        //validations
+        //validations->valida que el nombre y las iniciales no esten usadas en otro registro
         $request->validate([
           'name' => 'required|max:200|unique:genders,name,' . $id,
           'initials' => 'required|max:5|unique:genders,initials,' . $id
@@ -106,25 +106,24 @@ class GenderController extends Controller
         $gender->name = $request->name;
         $gender->initials = $request->initials;
         $gender->state = $request->state;
-        $gender->save();
+        $gender->save();//Guarda la informacion del registro
 
         DB::commit(); //commit de la transaccion
 
-        if ($gender) {
+        if ($gender) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $gender
           ], 202);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',
@@ -135,11 +134,11 @@ class GenderController extends Controller
     }
 
     public function updateState(Request $request, $id)
-    {
+    {//cambiar el estado del registro
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
+        //Busca registro por ID
         $gender = Gender::find($id);
 
         //Add data in table audits
@@ -152,26 +151,25 @@ class GenderController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
-        $gender->state = !$gender->state;
-        $gender->save();
+        $gender->state = !$gender->state;//cambia el estado del registro
+        $gender->save();//guarda el estado del registro
 
         DB::commit(); //commit de la transaccion
 
-        if ($gender) {
+        if ($gender) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $gender->state
           ], 202);
-        }else{
+        }else{//respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',

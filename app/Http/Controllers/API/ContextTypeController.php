@@ -20,7 +20,8 @@ class ContextTypeController extends Controller
      */
     public function index()
     {
-        return ContextType::all();
+      //retorna la información de la base de datos
+      return ContextType::all();
     }
 
     /**
@@ -31,29 +32,31 @@ class ContextTypeController extends Controller
      */
     public function store(RequestContextType $request)
     {
+      //Guarda la informacion del nuevo registro
       try {
         DB::beginTransaction();
 
+        //captura los parametros q vienen en la petición
         $data = $request->all();
         $data['slug'] = Str::slug($request->name,'-');
         $data['user_id'] = Auth::user()->id;/* trae el usuario q esta autenticado */
         $contextType = ContextType::create($data);
         DB::commit(); //commit de la transaccion
 
-        if ($contextType) {
+        if ($contextType) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Creado con éxito',
             'data' => $contextType
           ], 201);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al guardar',
             'data' => []
           ], 204);
         }
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al guardar',
@@ -83,13 +86,14 @@ class ContextTypeController extends Controller
      */
     public function update(Request $request, $id)
     {
+      //actualiza la infomracion del registro especifico
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
+        //Busca registro por ID
         $contextType =ContextType::find($id);
 
-        //validations
+        //validations->valida q no este creado con el mismo nombre
         $request->validate([
           'name' => 'required|max:200|unique:context_types,name,' . $id
         ]);
@@ -107,25 +111,25 @@ class ContextTypeController extends Controller
         $contextType->name = $request->name;
         $contextType->slug = Str::slug($request->name,'-');
         $contextType->state = $request->state;
+        //actualiza la infomracion del registro especifico
         $contextType->save();
 
         DB::commit(); //commit de la transaccion
 
-        if ($contextType) {
+        if ($contextType) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $contextType
           ], 202);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',
@@ -137,10 +141,11 @@ class ContextTypeController extends Controller
 
     public function updateState(Request $request, $id)
     {
+      //cambiar el estado del registro
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
+        //Busca registro por ID
         $contextType = ContextType::find($id);
 
         //Add data in table audits
@@ -152,27 +157,27 @@ class ContextTypeController extends Controller
           'all_data' => json_encode($contextType),
           'user_id' => Auth::user()->id
         ]);
-
+        //cambia el estado del registro
         $contextType->state = !$contextType->state;
+        //guarda el estado del registro
         $contextType->save();
 
         DB::commit(); //commit de la transaccion
 
-        if ($contextType) {
+        if ($contextType) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $contextType->state
           ], 202);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',

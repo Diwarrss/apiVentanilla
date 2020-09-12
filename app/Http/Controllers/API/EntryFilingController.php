@@ -42,7 +42,8 @@ class EntryFilingController extends Controller
      */
     public function index(Request $request)
     {
-      if ($request->fromDate && $request->toDate) {
+      //retorna la información de la base de datos
+      if ($request->fromDate && $request->toDate) { //retorna los datos que esten entre un rango de fechas especifico
         return EntryFiling::with(
           'upFiles',
           'dependences',
@@ -53,9 +54,9 @@ class EntryFilingController extends Controller
           )
           ->where('state', 1)
           ->whereBetween('created_at', [$request->fromDate, $request->toDate])
-          /* ->whereBetween('created_at', [$request->fromDate." 00:00:00", $request->toDate." 23:59:59"]) */
           ->get();
       }
+      //retorna los datos que tengan fecha de almacenamiento hoy
       return EntryFiling::with(
         'upFiles',
         'dependences',
@@ -77,12 +78,13 @@ class EntryFilingController extends Controller
      */
     public function store(Request $request)
     {
+      //Guarda la informacion del nuevo registro
       try {
         DB::beginTransaction();
 
-        //we search
-        $year = date("Y");
-        $lastFiling = EntryFiling::where('year', $year)->get()->max('cons_year');
+        $year = date("Y"); //capturamos el año actual
+        $lastFiling = EntryFiling::where('year', $year)->get()->max('cons_year'); //buscamos el ultimo registro del año guardado en la abse de datos
+        //aplicamos los ceros al valor para crear el radicado
         if (empty($lastFiling)) {
           $lastFiling = 0;
         }if ($lastFiling <= 9) {
@@ -96,43 +98,40 @@ class EntryFilingController extends Controller
         }else {
           $lastFiling = $lastFiling;
         };
-        $data = $request->all();
+        $data = $request->all(); //capturamos los parametros que vienen en la petición
         $data['date'] = Carbon::now();
-        $data['cons_year'] = $lastFiling + 1;
+        $data['cons_year'] = $lastFiling + 1; //se suma 1 para aumentar el consecutivo del año
         $data['year'] = date("Y");
         $data['slug'] = Str::slug($request->title,'-');
-        $data['settled'] = date("Y") . date("m") . date("d") . 1 . $lastFiling + 1;
+        $data['settled'] = date("Y") . date("m") . date("d") . 1 . $lastFiling + 1; //se agrega el numero 1 para identificar el typo de radicado y se suma 1 para aumentar el consecutivo del año
         $data['state'] = 1;
         $data['user_id'] = Auth::user()->id;/* trae el usuario q esta autenticado */
-        $entryFiling = EntryFiling::create($data);
+        $entryFiling = EntryFiling::create($data); //Guarda la informacion del nuevo registro
 
         $dependences = $request->dependences;//se recibe lo que se tiene en la propiedad data array dataOrden
-        //recorro todos los elementos
+        //recorro todos los elementos y los almaceno (todos los destinatarios del radicado)
         foreach ($dependences as $key => $det) {
           $info = new EntryFilingHasDependence();
           $info->entry_filing_id = $entryFiling->id;
           $info->dependence_id = $det['id'];
-          $info->save();
+          $info->save();//guarda la información
         }
         DB::commit(); //commit de la transaccion
 
-        //get People for id
-        //$people = People::find($data['people_id])
-
-        if ($entryFiling) {
+        if ($entryFiling) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Creado con éxito',
             'data' => $entryFiling
           ], 201);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al guardar',
             'data' => []
           ], 204);
         }
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al guardar',
@@ -150,6 +149,7 @@ class EntryFilingController extends Controller
      */
     public function show($id)
     {
+      //retorna la información especifica por ID de la base de datos
       return EntryFiling::with(
         'upFiles',
         'dependences',
@@ -169,10 +169,11 @@ class EntryFilingController extends Controller
      */
     public function update(Request $request, $id)
     {
+      //actualiza la infomracion del registro especifico
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
+        //Busca registro por ID
         $entry_filing = EntryFiling::find($id);
 
         //Add data in table audits
@@ -185,6 +186,7 @@ class EntryFilingController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
+        //captura los parametros q vienen en la petición
         $entry_filing->title = $request->title;
         /* $entry_filing->settled = $request->settled; */
         $entry_filing->slug = Str::slug($request->title,'-');
@@ -198,24 +200,23 @@ class EntryFilingController extends Controller
         $entry_filing->priority_id = $request->priority_id;
         $entry_filing->type_document_id = $request->type_document_id;
         $entry_filing->context_type_id = $request->context_type_id;
-        $entry_filing->save();
+        $entry_filing->save(); //guarda el resgitro actualizado
         DB::commit(); //commit de la transaccion
 
-        if ($entry_filing) {
+        if ($entry_filing) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $entry_filing
           ], 202);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',
@@ -227,11 +228,11 @@ class EntryFilingController extends Controller
 
     public function cancelFiling(Request $request, $id)
     {
+      //anular radicado, no elimina solo cambia el estado
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
-        $entry_filing = EntryFiling::find($id);
+        $entry_filing = EntryFiling::find($id); //Busca registro por ID
 
         //Add data in table audits
         $audit = Audit::create([
@@ -251,26 +252,25 @@ class EntryFilingController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
-        $entry_filing->state = !$entry_filing->state;
-        $entry_filing->save();
+        $entry_filing->state = !$entry_filing->state; //cambia el estado del radicado
+        $entry_filing->save(); //guarda el estado
 
         DB::commit(); //commit de la transaccion
 
-        if ($entry_filing) {
+        if ($entry_filing) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Anulado con éxito',
             'data' => $entry_filing->state
           ], 202);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al anular',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al anular',
@@ -298,11 +298,9 @@ class EntryFilingController extends Controller
         //$public_path = public_path();
         $fileName = $request->file->getClientOriginalName();
         $filePath = $request->file('file')->storeAs('temps', $fileName, 'public');
-
         if (!file_exists($filePath)) {
           File::makeDirectory($filePath, 0777, true, true);
         }
-
         return response()->json([
           'type' => 'success',
           'message' => 'Archivo subido con éxito',
@@ -348,16 +346,8 @@ class EntryFilingController extends Controller
             'all_data' => json_encode($file),
             'user_id' => Auth::user()->id
           ]);
-
-          /* DB::table('up_files')->insert([
-            'url' => $pathFull,
-            'fileable_type' => "App\\EntryFiling",
-            'fileable_id' => $entryFiling->id,
-            'created_at' => now(),
-            'updated_at' => now()
-          ]); */
         }
-        return response()->json([
+        return response()->json([ //respuesta exitosa
           'type' => 'success',
           'message' => 'Archivo subido con éxito',
           'data' => $file
@@ -367,10 +357,11 @@ class EntryFilingController extends Controller
 
     public function deleteFile(Request $request, $id)
     {
+      //eliminar archivo (storage y DB)
       try {
         DB::beginTransaction();
-        //$selectedFile = UpFile::where(['id', $id]);
-        $selectedFile = UpFile::find($id);
+
+        $selectedFile = UpFile::find($id);//Busca registro por ID
 
         //borramos archivo del storage
         $deletePath = Storage::disk('public')->delete($selectedFile->url);
@@ -387,22 +378,22 @@ class EntryFilingController extends Controller
 
         //borramos dato de up_files
         $selectedFile->delete();
-        DB::commit();
+        DB::commit();//commit de la transaccion
 
-        if ($selectedFile) {
+        if ($selectedFile) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Archivo eliminado con éxito',
             'data' => $selectedFile
           ], 202);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al eliminar',
             'data' => []
           ], 204);
         }
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al eliminar',
@@ -414,13 +405,13 @@ class EntryFilingController extends Controller
 
     public function downloadFile(Request $request, $id)
     {
+      //descarga el archivo en el equipo local
       try {
-        //return $request;
         DB::beginTransaction();
-        $selectedFile = UpFile::find($id);
-        $pathFull = Storage::disk('public')->get($selectedFile->url);
-        return response()->download($pathFull);
-      } catch (Exception $e) {
+        $selectedFile = UpFile::find($id);//buscamos el registro por ID
+        $pathFull = Storage::disk('public')->get($selectedFile->url);//capturamo sla ruta del archivo
+        return response()->download($pathFull); //descargamos el archivo con una ruta especifica
+      } catch (Exception $e) { //respuesta exitosa
         return response()->json([
           'type' => 'error',
           'message' => 'Error al descargar',
@@ -432,7 +423,8 @@ class EntryFilingController extends Controller
 
     public function generateTemplate(Request $request)
     {
-      if ($request->fromDate && $request->toDate) {
+      //generar planilla de radicados por fecha o los de hoy
+      if ($request->fromDate && $request->toDate) { //captura la información entre dos fechas especificas
         $entryFiling = EntryFiling::with(
           'upFiles',
           'dependences',
@@ -444,7 +436,7 @@ class EntryFilingController extends Controller
           ->where('state', 1)
           ->whereBetween('created_at', [$request->fromDate, $request->toDate])
           ->get();
-      }else{
+      }else{ //captura la información de hoy
         $entryFiling = EntryFiling::with(
           'upFiles',
           'dependences',
@@ -465,10 +457,11 @@ class EntryFilingController extends Controller
       $company = Company::get();
       $rangeDate = ($request->fromDate && $request->toDate) ? $fromDate .' a '. $toDate : $date->isoFormat('DD/MM/YYYY');
 
+      //crea el pdf con los parametros
       $pdf = PDF::loadView('Pdf.templateEntryFiling', compact(
         'entryFiling', 'company', 'rangeDate' , 'fromDate', 'toDate'
       ))->setPaper('a4', 'landscape');
       //$pdf->set_option('isPhpEnabled', true);
-      return $pdf->stream('Planilla.pdf');
+      return $pdf->stream('Planilla.pdf'); //muestra el pdf
     }
 }

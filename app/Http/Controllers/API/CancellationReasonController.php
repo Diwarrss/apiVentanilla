@@ -19,6 +19,7 @@ class CancellationReasonController extends Controller
      */
     public function index()
     {
+      //retorna la información de la base de datos
       return cancellationReason::all();
     }
 
@@ -30,28 +31,29 @@ class CancellationReasonController extends Controller
      */
     public function store(RequestCancellationReason $request)
     {
+      //Guarda la informacion del nuevo motivo de cancelación
       try {
         DB::beginTransaction();
 
         $data = $request->all();
         $data['user_id'] = Auth::user()->id;/* trae el usuario q esta autenticado */
         $cancellationReason = cancellationReason::create($data);
-        DB::commit();
+        DB::commit(); //commit de la transaccion
 
-        if ($cancellationReason) {
+        if ($cancellationReason) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Creado con éxito',
             'data' => $cancellationReason
           ], 202);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al guardar',
             'data' => []
           ], 204);
         }
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al guardar',
@@ -81,13 +83,14 @@ class CancellationReasonController extends Controller
      */
     public function update(Request $request, $id)
     {
+      //actualiza la infomracion del motivo de cancelación especifico
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
+        //Busca el motivo de cancelación por ID
         $cancellationReason = cancellationReason::find($id);
 
-        //validations
+        //validations-valida q no exista el motivo de cancelacion por nombre
         $request->validate([
           'name' => 'required|max:200|unique:cancellation_reasons,name,' . $id
         ]);
@@ -102,27 +105,28 @@ class CancellationReasonController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
+        //guarda los datos q se actualizaron
         $cancellationReason->name = $request->name;
         $cancellationReason->state = $request->state;
         $cancellationReason->save();
 
         DB::commit(); //commit de la transaccion
 
-        if ($cancellationReason) {
+
+        if ($cancellationReason) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $cancellationReason
           ], 202);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',
@@ -134,10 +138,11 @@ class CancellationReasonController extends Controller
 
     public function updateState(Request $request, $id)
     {
+      //cambia el estado del registro
       try {
         DB::beginTransaction();
 
-        /* $data = $request->all(); */
+        //Busca el motivo de cancelación por ID
         $cancellationReason = cancellationReason::find($id);
 
         //Add data in table audits
@@ -150,26 +155,26 @@ class CancellationReasonController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
+        //guarda el estado del registro
         $cancellationReason->state = !$cancellationReason->state;
         $cancellationReason->save();
 
         DB::commit(); //commit de la transaccion
 
-        if ($cancellationReason) {
+        if ($cancellationReason) { //respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $cancellationReason->state
           ], 202);
-        }else{
+        }else{ //respuesta de error
           return response()->json([
             'type' => 'error',
             'message' => 'Error al actualizar',
             'data' => []
           ], 204);
         }
-
-      } catch (Exception $e) {
+      } catch (Exception $e) { //error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',
