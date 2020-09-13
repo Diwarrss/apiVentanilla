@@ -277,14 +277,10 @@ class UserController extends Controller
       ]);
       $data = $request->all();//captura los parametros q vienen en la petición
       $user = User::find(Auth::user()->id);//Busca registro por ID
+      //return FacadesHash::check($request->old_password, $user->password);
       if ($user) {
-        if(!FacadesHash::check($data['old_password'], $user->password)){//valida que la contraseña consida con la que tiene la base de datos
-          return response()->json([//respeusta de error al no coincidir las contraseñas
-            'type' => 'error',
-            'message' => 'Error al actualizar',
-            'data' => []
-          ], 204);
-        }else{
+        if (FacadesHash::check($request->old_password, $user->password)) {
+          // The passwords match...
           //guarda la nueva contraseña encriptada en la base de datos
           $user->fill([
             'password' => FacadesHash::make($request->new_password)
@@ -294,6 +290,12 @@ class UserController extends Controller
             'type' => 'success',
             'message' => 'Actualizado con éxito',
             'data' => $user->state
+          ], 202);
+        }else{
+          return response()->json([
+            'type' => 'error',
+            'message' => 'la contraseña actual no coincide',
+            'data' => []
           ], 202);
         }
       }
