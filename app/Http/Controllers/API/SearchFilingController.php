@@ -129,6 +129,74 @@ class SearchFilingController extends Controller
           }
           if ($request->addressee) {
             //retorna la informacion que pertenece al destinatario
+            if ($request->fromDate && $request->toDate) {
+              return EntryFiling::with(
+                'upFiles',
+                'dependences',
+                'TypeDocument:id,name',
+                'ContextType:id,name',
+                'People:id,names',
+                'Priority:id,name'
+                )
+                ->whereHas('dependences', function($query) use ($addressee_id)  {//condicion de la relacion de las tablas
+                  $query->where('entry_filing_has_dependences.dependence_id', $addressee_id);
+                })
+                ->where($matchThese)
+                ->where('state', 1)
+                ->whereBetween('created_at', [$request->fromDate, $request->toDate])
+                /* ->whereBetween('created_at', [$request->fromDate." 00:00:00", $request->toDate." 23:59:59"]) */
+                ->get();
+            } else {
+              return EntryFiling::with(
+                'upFiles',
+                'dependences',
+                'TypeDocument:id,name',
+                'ContextType:id,name',
+                'People:id,names',
+                'Priority:id,name'
+                )
+                ->whereHas('dependences', function($query) use ($addressee_id)  {//condicion de la relacion de las tablas
+                  $query->where('entry_filing_has_dependences.dependence_id', $addressee_id);
+                })
+                ->where($matchThese)
+                ->where('state', 1)
+                /* ->whereBetween('created_at', [$request->fromDate, $request->toDate]) */
+                /* ->whereBetween('created_at', [$request->fromDate." 00:00:00", $request->toDate." 23:59:59"]) */
+                ->get();
+            }
+          }
+          //si tiene algun parametro de busqueda retorna entre fehcas seleccionadas o toda la infomracion sin flitro de fecha
+          if ($request->title || $request->typeDocument || $request->sender) {
+            if ($request->fromDate && $request->toDate) {
+              return EntryFiling::with(
+                'upFiles',
+                'dependences',
+                'TypeDocument:id,name',
+                'ContextType:id,name',
+                'People:id,names',
+                'Priority:id,name'
+                )
+                ->where($matchThese)
+                ->where('state', 1)
+                ->whereBetween('created_at', [$request->fromDate, $request->toDate])
+                ->get();
+            } else {
+              return EntryFiling::with(
+                'upFiles',
+                'dependences',
+                'TypeDocument:id,name',
+                'ContextType:id,name',
+                'People:id,names',
+                'Priority:id,name'
+                )
+                ->where($matchThese)
+                ->where('state', 1)
+                /* ->whereDate('created_at', now()) */
+                ->get();
+            }
+          }
+          //retorna la informacion que perteneces a toda la data sin numero de radicado ni destinatario pero solo del dia actual
+          if ($request->fromDate && $request->toDate) {
             return EntryFiling::with(
               'upFiles',
               'dependences',
@@ -137,28 +205,24 @@ class SearchFilingController extends Controller
               'People:id,names',
               'Priority:id,name'
               )
-              ->whereHas('dependences', function($query) use ($addressee_id)  {//condicion de la relacion de las tablas
-                $query->where('entry_filing_has_dependences.dependence_id', $addressee_id);
-              })
               ->where($matchThese)
               ->where('state', 1)
               ->whereBetween('created_at', [$request->fromDate, $request->toDate])
-              /* ->whereBetween('created_at', [$request->fromDate." 00:00:00", $request->toDate." 23:59:59"]) */
+              ->get();
+          } else {
+            return EntryFiling::with(
+              'upFiles',
+              'dependences',
+              'TypeDocument:id,name',
+              'ContextType:id,name',
+              'People:id,names',
+              'Priority:id,name'
+              )
+              ->where($matchThese)
+              ->where('state', 1)
+              ->whereDate('created_at', now())
               ->get();
           }
-          //retorna la informacion que perteneces a toda la data sin numero de radicado ni destinatario
-          return EntryFiling::with(
-            'upFiles',
-            'dependences',
-            'TypeDocument:id,name',
-            'ContextType:id,name',
-            'People:id,names',
-            'Priority:id,name'
-            )
-            ->where($matchThese)
-            ->where('state', 1)
-            ->whereBetween('created_at', [$request->fromDate, $request->toDate])
-            ->get();
         }else if ($request->type === "1") { //type=1 es para radicacion de salida
           if ($request->setledSearch) {
             //retorna la informacion que pertenece al numero de radicado
@@ -176,6 +240,72 @@ class SearchFilingController extends Controller
           }
           if ($request->addressee) {
             //retorna la informacion que pertenece al destinatario
+            if ($request->fromDate && $request->toDate) {
+              return OutgoingFiling::with(
+                'upFiles',
+                'people',
+                'TypeDocument:id,name',
+                'ContextType:id,name',
+                'dependence:id,names',
+                'Priority:id,name'
+                )
+                ->whereHas('people', function($query) use ($addressee_id)  {//condicion en una relacion de la base de datos
+                  $query->where('outgoing_filing_has_people.people_id', $addressee_id);
+                })
+                ->where($matchThese)
+                ->where('state', 1)
+                ->whereBetween('created_at', [$request->fromDate, $request->toDate])
+                ->get();
+            } else {
+              return OutgoingFiling::with(
+                'upFiles',
+                'people',
+                'TypeDocument:id,name',
+                'ContextType:id,name',
+                'dependence:id,names',
+                'Priority:id,name'
+                )
+                ->whereHas('people', function($query) use ($addressee_id)  {//condicion en una relacion de la base de datos
+                  $query->where('outgoing_filing_has_people.people_id', $addressee_id);
+                })
+                ->where($matchThese)
+                ->where('state', 1)
+                /* ->whereBetween('created_at', [$request->fromDate, $request->toDate]) */
+                ->get();
+            }
+          }
+          //retorna la informacion completa si no tiene parametros de fecha, solo si verifica algun parametro de busqueda
+          if ($request->title || $request->typeDocument || $request->sender) {
+            if ($request->fromDate && $request->toDate) {
+              return OutgoingFiling::with(
+                'upFiles',
+                'people',
+                'TypeDocument:id,name',
+                'ContextType:id,name',
+                'dependence:id,names',
+                'Priority:id,name'
+                )
+                ->where($matchThese)
+                ->where('state', 1)
+                ->whereBetween('created_at', [$request->fromDate, $request->toDate])
+                ->get();
+            } else {
+              return OutgoingFiling::with(
+                'upFiles',
+                'people',
+                'TypeDocument:id,name',
+                'ContextType:id,name',
+                'dependence:id,names',
+                'Priority:id,name'
+                )
+                ->where($matchThese)
+                ->where('state', 1)
+                /* ->whereDate('created_at', now()) */
+                ->get();
+            }
+          }
+          //retorna la informacion que perteneces a toda la data sin numero de radicado ni destinatario pero solo del dia actual
+          if ($request->fromDate && $request->toDate) {
             return OutgoingFiling::with(
               'upFiles',
               'people',
@@ -184,27 +314,24 @@ class SearchFilingController extends Controller
               'dependence:id,names',
               'Priority:id,name'
               )
-              ->whereHas('people', function($query) use ($addressee_id)  {//condicion en una relacion de la base de datos
-                $query->where('outgoing_filing_has_people.people_id', $addressee_id);
-              })
               ->where($matchThese)
               ->where('state', 1)
               ->whereBetween('created_at', [$request->fromDate, $request->toDate])
               ->get();
+          } else {
+            return OutgoingFiling::with(
+              'upFiles',
+              'people',
+              'TypeDocument:id,name',
+              'ContextType:id,name',
+              'dependence:id,names',
+              'Priority:id,name'
+              )
+              ->where($matchThese)
+              ->where('state', 1)
+              ->whereDate('created_at', now())
+              ->get();
           }
-          //retorna la informacion que perteneces a toda la data sin numero de radicado ni destinatario
-          return OutgoingFiling::with(
-            'upFiles',
-            'people',
-            'TypeDocument:id,name',
-            'ContextType:id,name',
-            'dependence:id,names',
-            'Priority:id,name'
-            )
-            ->where($matchThese)
-            ->where('state', 1)
-            ->whereBetween('created_at', [$request->fromDate, $request->toDate])
-            ->get();
         }
       }
     }

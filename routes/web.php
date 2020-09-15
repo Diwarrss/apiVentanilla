@@ -10,6 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+//rutas para descargar excel o csv
+Route::get('type-documents/export', 'API\TypeDocumentController@export'); //tipos de docuemnento
 
 Route::get('/', function () {
     return view('welcome');
