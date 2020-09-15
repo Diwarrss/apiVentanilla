@@ -279,7 +279,7 @@ class UserController extends Controller
       $user = User::find(Auth::user()->id);//Busca registro por ID
       //return FacadesHash::check($request->old_password, $user->password);
       if ($user) {
-        if (FacadesHash::check($request->old_password, $user->password)) {
+        if (FacadesHash::check($request->old_password, $user->password)) {//validamos que la iformacion de la contraseña actual coincida
           // The passwords match...
           //guarda la nueva contraseña encriptada en la base de datos
           $user->fill([
@@ -291,7 +291,7 @@ class UserController extends Controller
             'message' => 'Actualizado con éxito',
             'data' => $user->state
           ], 202);
-        }else{
+        }else{//no conincide la contraseña actual con la información
           return response()->json([
             'type' => 'error',
             'message' => 'la contraseña actual no coincide',
