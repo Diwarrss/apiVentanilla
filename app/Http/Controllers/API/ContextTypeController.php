@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Audit;
 use App\ContextType;
+use App\Exports\ContextTypeExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestContextType;
 use Illuminate\Http\Request;
@@ -196,5 +197,13 @@ class ContextTypeController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    //download csv
+    public function export()
+    {
+      return (new ContextTypeExport)->download('ContextTypes.csv', \Maatwebsite\Excel\Excel::CSV);
+
+      //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Audit;
+use App\Exports\PriorityExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestPriority;
 use App\Priority;
@@ -188,5 +189,13 @@ class PriorityController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    //download csv
+    public function export()
+    {
+      return (new PriorityExport)->download('Priorities.csv', \Maatwebsite\Excel\Excel::CSV);
+
+      //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
     }
 }

@@ -2,7 +2,8 @@
 
 namespace App\Exports;
 
-use App\TypeDocument;
+use App\ContextType;
+//use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -11,19 +12,17 @@ use Maatwebsite\Excel\Concerns\Exportable;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class TypeDocumentExport implements FromQuery, WithHeadings, WithMapping, WithColumnFormatting
-{
-  /**
-  * @return \Illuminate\Support\Collection
-  */
-  use Exportable;
 
-  //Recibir parametros que envian desde el controlador
-  /* public function __construct($fechaInicio, $fechaFinal)
-  {
-    $this->fechaInicio = $fechaInicio;
-    $this->fechaFinal = $fechaFinal;
-  } */
+class ContextTypeExport implements FromQuery, WithHeadings, WithMapping, WithColumnFormatting
+{
+    /**
+    * @return \Illuminate\Support\Collection
+    */
+    /* public function collection()
+    {
+        return ContextType::all();
+    } */
+    use Exportable;
 
   //elegir los datos y dar un formato a los mismo por medio de MAP, elegimos lo q queremos exportar
   public function map($invoice): array
@@ -57,7 +56,7 @@ class TypeDocumentExport implements FromQuery, WithHeadings, WithMapping, WithCo
     ->where('ventas.estado', 1); */
     //return DB::table('type_documents')->get();
     //return TypeDocument::select('type_documents.id', 'type_documents.name', 'type_documents.state', 'type_documents.created_at')->get();
-    return TypeDocument::query();
+    return ContextType::query();
   }
 
   public function headings(): array

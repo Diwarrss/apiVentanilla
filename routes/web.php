@@ -12,6 +12,12 @@
 */
 //rutas para descargar excel o csv
 Route::get('type-documents/export', 'API\TypeDocumentController@export'); //tipos de docuemnento
+Route::get('priorities/export', 'API\PriorityController@export'); //tipos de docuemnento
+Route::get('context-types/export', 'API\ContextTypeController@export'); //tipos de contexto
+Route::get('type-identifications/export', 'API\TypeIdentificationController@export'); //tipos de identificacion
+Route::get('genders/export', 'API\GenderController@export'); //generos
+Route::get('cancellation-reason/export', 'API\CancellationReasonController@export'); //generos
+Route::get('dependences/export', 'API\DependenceController@export'); //dependencias
 
 Route::get('/', function () {
     return view('welcome');

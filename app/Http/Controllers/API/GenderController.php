@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Audit;
+use App\Exports\GenderExport;
 use App\Gender;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestGender;
@@ -188,5 +189,13 @@ class GenderController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    //download csv
+    public function export()
+    {
+      return (new GenderExport)->download('Genders.csv', \Maatwebsite\Excel\Excel::CSV);
+
+      //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
     }
 }

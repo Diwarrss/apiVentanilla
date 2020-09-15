@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Audit;
 use App\Dependence;
+use App\Exports\DependenceExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestDependence;
 use Illuminate\Http\Request;
@@ -211,5 +212,13 @@ class DependenceController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    //download csv
+    public function export()
+    {
+      return (new DependenceExport)->download('Dependences.csv', \Maatwebsite\Excel\Excel::CSV);
+
+      //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
     }
 }
