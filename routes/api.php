@@ -33,7 +33,8 @@ Route::group(['auth:sanctum'], function () {
 
     //TypeDocumentController
     Route::apiResource('type-documents', 'API\TypeDocumentController');
-    Route::put('type-documents-state/{id}', 'API\TypeDocumentController@updateState' );
+    Route::put('type-documents-state/{id}', 'API\TypeDocumentController@updateState');
+    Route::get('type-documents/export', 'API\TypeDocumentController@export'); //for download excel o csv
 
     //PriorityController
     Route::apiResource('priorities', 'API\PriorityController');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Audit;
+use App\Exports\TypeDocumentExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestTypeDocument;
 use App\TypeDocument;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Excel;
 
 class TypeDocumentController extends Controller
 {
@@ -189,5 +191,13 @@ class TypeDocumentController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    //download csv
+    public function export()
+    {
+      return (new TypeDocumentExport)->download('TypeDocuments.csv', \Maatwebsite\Excel\Excel::CSV);
+
+      //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
     }
 }
