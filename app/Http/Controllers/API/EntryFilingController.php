@@ -9,6 +9,7 @@ use App\EntryFiling;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use App\EntryFilingHasDependence;
+use App\Exports\EntryFilingExport;
 use App\People;
 use App\UpFile;
 use DateTime;
@@ -463,5 +464,14 @@ class EntryFilingController extends Controller
       ))->setPaper('a4', 'landscape');
       //$pdf->set_option('isPhpEnabled', true);
       return $pdf->stream('Planilla.pdf'); //muestra el pdf
+    }
+
+    //download csv
+    public function export(Request $request)
+    {
+      //return $request;
+      return (new EntryFilingExport($request->fromDate, $request->toDate))->download('EntryFiling.csv', \Maatwebsite\Excel\Excel::CSV);
+
+      //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
     }
 }

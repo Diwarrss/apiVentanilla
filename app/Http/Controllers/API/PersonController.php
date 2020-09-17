@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Audit;
+use App\Exports\PeopleExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestPeople;
 use App\People;
@@ -195,5 +196,13 @@ class PersonController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    //download csv
+    public function export()
+    {
+      return (new PeopleExport)->download('People.csv', \Maatwebsite\Excel\Excel::CSV);
+
+      //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
     }
 }

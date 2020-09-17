@@ -63,6 +63,7 @@ Route::group(['auth:sanctum'], function () {
     Route::post('entry-filing/delete-files/{id}', 'API\EntryFilingController@deleteFile');
     //Route::get('entry-filing/download-files/{id}', 'API\EntryFilingController@downloadFile');
     Route::get('template-entry-filing', 'API\EntryFilingController@generateTemplate');
+    Route::get('entryfiling/export', 'API\EntryFilingController@export'); //entryfiling
 
     //OutgoingFilingController
     Route::apiResource('outgoing-filing', 'API\OutgoingFilingController');

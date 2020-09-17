@@ -18,6 +18,8 @@ Route::get('type-identifications/export', 'API\TypeIdentificationController@expo
 Route::get('genders/export', 'API\GenderController@export'); //generos
 Route::get('cancellation-reason/export', 'API\CancellationReasonController@export'); //generos
 Route::get('dependences/export', 'API\DependenceController@export'); //dependencias
+Route::get('people/export', 'API\PersonController@export'); //people
+//Route::get('entryfiling/export', 'API\EntryFilingController@export'); //entryfiling
 
 Route::get('/', function () {
     return view('welcome');
