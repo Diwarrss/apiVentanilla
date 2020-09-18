@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use File;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EntryFilingController extends Controller
 {
@@ -470,7 +471,8 @@ class EntryFilingController extends Controller
     public function export(Request $request)
     {
       //return $request;
-      return (new EntryFilingExport($request->fromDate, $request->toDate))->download('EntryFiling.csv', \Maatwebsite\Excel\Excel::CSV);
+      //return (new EntryFilingExport($request->fromDate, $request->toDate))->download('EntryFiling.csv', \Maatwebsite\Excel\Excel::CSV);
+      return Excel::download(new EntryFilingExport($request->fromDate, $request->toDate), 'EntryFiling.xlsx');
 
       //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
     }
