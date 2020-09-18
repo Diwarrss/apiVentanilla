@@ -467,13 +467,33 @@ class EntryFilingController extends Controller
       return $pdf->stream('Planilla.pdf'); //muestra el pdf
     }
 
-    //download csv
+    //download XLSX
     public function export(Request $request)
     {
-      //return $request;
-      //return (new EntryFilingExport($request->fromDate, $request->toDate))->download('EntryFiling.csv', \Maatwebsite\Excel\Excel::CSV);
-      return Excel::download(new EntryFilingExport($request->fromDate, $request->toDate), 'EntryFiling.xlsx');
-
-      //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
+      if ($request->fromDate && $request->toDate) {
+        return EntryFiling::Join ('people', 'entry_filings.people_id', '=', 'people.id')
+                        ->join('entry_filing_has_dependences', 'entry_filing_has_dependences.entry_filing_id', '=', 'entry_filings.id')
+                        ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
+                        ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
+                        ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'people.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                        ->whereBetween('entry_filings.created_at', [$request->fromDate, $request->toDate])
+                        ->where('entry_filings.state', 1)
+                        ->get();
+        /* return EntryFiling::with(
+          'dependences',
+          'People:id,names'
+          )
+          ->where('state', 1)
+          ->whereBetween('created_at', [$request->fromDate, $request->toDate]); */
+      } else {
+        return EntryFiling::Join ('people', 'entry_filings.people_id', '=', 'people.id')
+                        ->join('entry_filing_has_dependences', 'entry_filing_has_dependences.entry_filing_id', '=', 'entry_filings.id')
+                        ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
+                        ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
+                        ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'people.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                        ->whereDate('entry_filings.created_at', [$request->fromDate])
+                        ->where('entry_filings.state', 1)
+                        ->get();
+      }
     }
 }

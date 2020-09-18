@@ -63,7 +63,7 @@ Route::group(['auth:sanctum'], function () {
     Route::post('entry-filing/delete-files/{id}', 'API\EntryFilingController@deleteFile');
     //Route::get('entry-filing/download-files/{id}', 'API\EntryFilingController@downloadFile');
     Route::get('template-entry-filing', 'API\EntryFilingController@generateTemplate');
-    Route::get('entryfiling/export', 'API\EntryFilingController@export'); //entryfiling
+    Route::get('entryfiling/export', 'API\EntryFilingController@export'); //export xlsx
 
     //OutgoingFilingController
     Route::apiResource('outgoing-filing', 'API\OutgoingFilingController');
@@ -73,6 +73,7 @@ Route::group(['auth:sanctum'], function () {
     Route::post('outgoing-filing/delete-files/{id}', 'API\OutgoingFilingController@deleteFile');
     //Route::get('outgoing-filing/download-files/{id}', 'API\OutgoingFilingController@downloadFile');
     Route::get('template-outgoing-filing', 'API\OutgoingFilingController@generateTemplate');
+    Route::get('outgoingfiling/export', 'API\OutgoingFilingController@export'); //export xlsx
 
     //RolHasPermissionController, PermisionController and RolController
     Route::apiResource('all-rol', 'API\RolController');
@@ -100,6 +101,7 @@ Route::group(['auth:sanctum'], function () {
 
     //SearchFilingController
     Route::apiResource('result-filings', 'API\SearchFilingController');
+    Route::get('searchfiling/export', 'API\SearchFilingController@export'); //export xlsx
   });
 });
 
