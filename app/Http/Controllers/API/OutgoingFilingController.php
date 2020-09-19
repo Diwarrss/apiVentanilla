@@ -539,7 +539,7 @@ class OutGoingFilingController extends Controller
                         ->join('people', 'people.id', '=', 'outgoing_filing_has_people.people_id')
                         ->join('type_documents', 'outgoing_filings.type_document_id', '=', 'type_documents.id')
                         ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'people.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
-                        ->whereDate('outgoing_filings.created_at', [$request->fromDate])
+                        ->whereDate('outgoing_filings.created_at', now())
                         ->where('outgoing_filings.state', 1)
                         ->get();
       }
