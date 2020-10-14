@@ -62,7 +62,7 @@ class UserController extends Controller
           $pathFull = Storage::disk('public')->putFileAs(//sube el archivo en la ruta absoluta con su respectivo nombre
             $path , $request->firm , 'firm.' . $fileExt
           );
-          $user->firm = "storage/$pathFull";
+          $user->firm = "/storage/$pathFull";
           $user->save();//guarda la ruta d ela firma en la base de datos
         }
         //sube la foto del usuario al servidor
@@ -75,7 +75,7 @@ class UserController extends Controller
           $pathFull = Storage::disk('public')->putFileAs(//sube el archivo en la ruta absoluta con su respectivo nombre
             $path , $request->image , 'image.' . $fileExt
           );
-          $user->image = "storage/$pathFull";
+          $user->image = "/storage/$pathFull";
           $user->save();//guarda la ruta de la foto en la base de datos
         }
 
@@ -161,7 +161,7 @@ class UserController extends Controller
           $pathFull = Storage::disk('public')->putFileAs(
             $path , $request->firm , 'firm.' . $fileExt
           );
-          $user->firm = "storage/$pathFull";
+          $user->firm = "/storage/$pathFull";
         }
         //sube la nueva foto del usuario al servidor
         if($request->hasFile('image')) {
@@ -173,7 +173,7 @@ class UserController extends Controller
           $pathFull = Storage::disk('public')->putFileAs(
             $path , $request->image , 'image.' . $fileExt
           );
-          $user->image = "storage/$pathFull";
+          $user->image = "/storage/$pathFull";
         }
 
         $user->save();//Guarda la informacion del registro

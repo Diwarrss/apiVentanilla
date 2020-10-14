@@ -21,8 +21,8 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->boolean('state')->default(true);
             $table->rememberToken();
-            $table->string('firm')->nullable()->default('users/firm.png');
-            $table->string('image')->nullable()->default('users/profile.png');
+            $table->string('firm')->nullable()->default('/img/users/firm.png');
+            $table->string('image')->nullable()->default('/img/users/profile.png');
             $table->unsignedBigInteger('dependence_id')->nullable();
             $table->foreign('dependence_id')->references('id')->on('dependences');
             $table->unsignedBigInteger('dependencePerson_id')->nullable();
