@@ -354,7 +354,7 @@ class UserController extends Controller
           $pathFull = Storage::disk('public')->putFileAs(//pone la nueva imagen el el servidor con su respectivo nombre
             $path , $request->image , 'image.' . $fileExt
           );
-          $user->image = "storage/$pathFull";
+          $user->image = "/storage/$pathFull";
           $user->save();//guarda la ruta de la imagen el la base de datos
         }
 
