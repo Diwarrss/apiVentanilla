@@ -137,7 +137,7 @@ class CancellationReasonController extends Controller
       }
     }
 
-    public function updateState(Request $request, $id)
+    public function updateState($id)
     {
       //cambia el estado del registro
       try {
@@ -145,6 +145,15 @@ class CancellationReasonController extends Controller
 
         //Busca el motivo de cancelación por ID
         $cancellationReason = cancellationReason::find($id);
+        //return $cancellationReason;
+        //guarda el estado del registro
+        if ($cancellationReason->state) {
+
+          $cancellationReason->state = false;
+        }else {
+          $cancellationReason->state = true;
+        }
+        $cancellationReason->save();
 
         //Add data in table audits
         $audit = Audit::create([
@@ -155,10 +164,6 @@ class CancellationReasonController extends Controller
           'all_data' => json_encode($cancellationReason),
           'user_id' => Auth::user()->id
         ]);
-
-        //guarda el estado del registro
-        $cancellationReason->state = !$cancellationReason->state;
-        $cancellationReason->save();
 
         DB::commit(); //commit de la transaccion
 
