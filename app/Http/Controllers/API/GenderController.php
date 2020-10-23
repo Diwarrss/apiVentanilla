@@ -142,6 +142,14 @@ class GenderController extends Controller
         //Busca registro por ID
         $gender = Gender::find($id);
 
+        //cambia el estado del registro
+        if ($gender->state) {
+          $gender->state = false;
+        }else {
+          $gender->state = true;
+        }
+        $gender->save();//guarda el estado del registro
+
         //Add data in table audits
         $audit = Audit::create([
           'table' => 'genders',
@@ -151,9 +159,6 @@ class GenderController extends Controller
           'all_data' => json_encode($gender),
           'user_id' => Auth::user()->id
         ]);
-
-        $gender->state = !$gender->state;//cambia el estado del registro
-        $gender->save();//guarda el estado del registro
 
         DB::commit(); //commit de la transaccion
 

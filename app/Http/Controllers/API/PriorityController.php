@@ -142,6 +142,14 @@ class PriorityController extends Controller
 
         $priority = Priority::find($id);//Busca registro por ID
 
+        //cambia el estado del registro
+        if ($priority->state) {
+          $priority->state = false;
+        }else {
+          $priority->state = true;
+        }
+        $priority->save();//guarda el estado del registro
+
         //Add data in table audits
         $audit = Audit::create([
           'table' => 'priorities',
@@ -151,9 +159,6 @@ class PriorityController extends Controller
           'all_data' => json_encode($priority),
           'user_id' => Auth::user()->id
         ]);
-
-        $priority->state = !$priority->state;//cambia el estado del registro
-        $priority->save();//guarda el estado del registro
 
         DB::commit(); //commit de la transaccion
 

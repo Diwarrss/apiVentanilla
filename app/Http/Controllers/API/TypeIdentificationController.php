@@ -142,6 +142,14 @@ class TypeIdentificationController extends Controller
 
         $typeIdentification = TypeIdentification::find($id);//Busca registro por ID
 
+        //cambia el estado del registro
+        if ($typeIdentification->state) {
+          $typeIdentification->state = false;
+        }else {
+          $typeIdentification->state = true;
+        }
+        $typeIdentification->save();//guarda el estado del registro
+
         //Add data in table audits
         $audit = Audit::create([
           'table' => 'type_identifications',
@@ -151,9 +159,6 @@ class TypeIdentificationController extends Controller
           'all_data' => json_encode($typeIdentification),
           'user_id' => Auth::user()->id
         ]);
-
-        $typeIdentification->state = !$typeIdentification->state;//cambia el estado del registro
-        $typeIdentification->save();//guarda el estado del registro
 
         DB::commit(); //commit de la transaccion
 

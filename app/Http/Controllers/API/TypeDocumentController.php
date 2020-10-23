@@ -143,6 +143,14 @@ class TypeDocumentController extends Controller
 
         $typeDocument = TypeDocument::find($id);//Busca registro por ID
 
+        //cambia el estado del registro
+        if ($typeDocument->state) {
+          $typeDocument->state = false;
+        }else {
+          $typeDocument->state = true;
+        }
+        $typeDocument->save();//guarda el estado del registro
+
         //Add data in table audits
         $audit = Audit::create([
           'table' => 'type_documents',
@@ -152,9 +160,6 @@ class TypeDocumentController extends Controller
           'all_data' => json_encode($typeDocument),
           'user_id' => Auth::user()->id
         ]);
-
-        $typeDocument->state = !$typeDocument->state;//cambia el estado del registro
-        $typeDocument->save();//guarda el estado del registro
 
         DB::commit(); //commit de la transaccion
 

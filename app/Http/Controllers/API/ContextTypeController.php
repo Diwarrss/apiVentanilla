@@ -149,6 +149,15 @@ class ContextTypeController extends Controller
         //Busca registro por ID
         $contextType = ContextType::find($id);
 
+        //cambia el estado del registro
+        if ($contextType->state) {
+          $contextType->state = false;
+        }else {
+          $contextType->state = true;
+        }
+        //guarda el estado del registro
+        $contextType->save();
+
         //Add data in table audits
         $audit = Audit::create([
           'table' => 'context_types',
@@ -158,10 +167,6 @@ class ContextTypeController extends Controller
           'all_data' => json_encode($contextType),
           'user_id' => Auth::user()->id
         ]);
-        //cambia el estado del registro
-        $contextType->state = !$contextType->state;
-        //guarda el estado del registro
-        $contextType->save();
 
         DB::commit(); //commit de la transaccion
 

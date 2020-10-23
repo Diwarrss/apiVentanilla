@@ -149,6 +149,14 @@ class PersonController extends Controller
 
         $people = People::find($id);//Busca registro por ID
 
+        //cambia el estado del registro
+        if ($people->state) {
+          $people->state = false;
+        }else {
+          $people->state = true;
+        }
+        $people->save();//guarda el estado del registro
+
         //Add data in table audits
         $audit = Audit::create([
           'table' => 'people',
@@ -158,9 +166,6 @@ class PersonController extends Controller
           'all_data' => json_encode($people),
           'user_id' => Auth::user()->id
         ]);
-
-        $people->state = !$people->state;//cambia el estado del registro
-        $people->save();//guarda el estado del registro
 
         DB::commit(); //commit de la transaccion
 

@@ -163,6 +163,15 @@ class DependenceController extends Controller
         //Busca registro por ID
         $dependence = Dependence::find($id);
 
+        //cambia el estado del registro
+        if ($dependence->state) {
+          $dependence->state = false;
+        }else {
+          $dependence->state = true;
+        }
+        //guarda el estado del registro
+        $dependence->save();
+
         //Add data in table audits
         $audit = Audit::create([
           'table' => 'dependences',
@@ -172,11 +181,6 @@ class DependenceController extends Controller
           'all_data' => json_encode($dependence),
           'user_id' => Auth::user()->id
         ]);
-
-        //cambia el estado del registro
-        $dependence->state = !$dependence->state;
-        //guarda el estado del registro
-        $dependence->save();
 
         DB::commit(); //commit de la transaccion
 

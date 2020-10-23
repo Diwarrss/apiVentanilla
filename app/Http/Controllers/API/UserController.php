@@ -225,6 +225,14 @@ class UserController extends Controller
 
         $user = User::find($id);//Busca registro por ID
 
+        //cambia el estado del registro
+        if ($user->state) {
+          $user->state = false;
+        }else {
+          $user->state = true;
+        }
+        $user->save();//guarda el estado del registro
+
         //Add data in table audits
         $audit = Audit::create([
           'table' => 'users',
@@ -234,9 +242,6 @@ class UserController extends Controller
           'all_data' => json_encode($user),
           'user_id' => Auth::user()->id
         ]);
-
-        $user->state = !$user->state;//cambia el estado del registro
-        $user->save();//guarda el estado del registro
 
         DB::commit(); //commit de la transaccion
 
