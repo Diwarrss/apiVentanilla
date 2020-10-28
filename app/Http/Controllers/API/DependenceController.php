@@ -225,4 +225,10 @@ class DependenceController extends Controller
 
       //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
     }
+
+    public function dataExport()
+    {
+      return Dependence::select('id as ID', 'identification as Identificación', 'names as Nombre', 'telephone as Telefono', 'address as Dirección', DB::raw("(CASE state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), DB::raw("(CASE type WHEN 'person' THEN 'Persona' ELSE 'Dependencia' END) AS Tipo"))
+                      ->get();
+    }
 }

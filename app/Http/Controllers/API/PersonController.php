@@ -210,4 +210,10 @@ class PersonController extends Controller
 
       //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
     }
+
+    public function dataExport()
+    {
+      return People::select('id as ID', 'identification as Identificación', 'names as Nombre', 'telephone as Telefono', 'address as Dirección', 'email as Email', DB::raw("(CASE state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), DB::raw("(CASE type WHEN 'person' THEN 'Persona' ELSE 'Compañia' END) AS Tipo"))
+                      ->get();
+    }
 }

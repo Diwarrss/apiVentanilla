@@ -27,34 +27,41 @@ Route::group(['auth:sanctum'], function () {
     Route::get('roles', 'RoleController');
     Route::post('auth/logout', 'Auth\LoginController@logout');
 
-    //DependenceController
+    //DependenceController d
     Route::apiResource('dependences', 'API\DependenceController');
     Route::put('dependences-state/{id}', 'API\DependenceController@updateState');
+    Route::get('dependence-export', 'API\DependenceController@dataExport'); //export xlsx
 
     //TypeDocumentController
     Route::apiResource('type-documents', 'API\TypeDocumentController');
     Route::put('type-documents-state/{id}', 'API\TypeDocumentController@updateState');
+    Route::get('type-document-export', 'API\TypeDocumentController@dataExport'); //export xlsx
     //Route::get('type-documents/export', 'API\TypeDocumentController@export'); //for download excel o csv
 
     //PriorityController
     Route::apiResource('priorities', 'API\PriorityController');
     Route::put('priorities-state/{id}', 'API\PriorityController@updateState' );
+    Route::get('priority-export', 'API\PriorityController@dataExport'); //export xlsx
 
     //PersonController
     Route::apiResource('people', 'API\PersonController');
     Route::put('people-state/{id}', 'API\PersonController@updateState');
+    Route::get('person-export', 'API\PersonController@dataExport'); //export xlsx
 
-    //ContextTypeController
+    //ContextTypeController context-type-export
     Route::apiResource('context-types', 'API\ContextTypeController');
     Route::put('context-types-state/{id}', 'API\ContextTypeController@updateState');
+    Route::get('context-type-export', 'API\ContextTypeController@dataExport'); //export xlsx
 
     //TypeIdentificationController
     Route::apiResource('type-identifications', 'API\TypeIdentificationController');
     Route::put('type-identifications-state/{id}', 'API\TypeIdentificationController@updateState');
+    Route::get('type-identification-export', 'API\TypeIdentificationController@dataExport'); //export xlsx
 
     //GenderController
     Route::apiResource('genders', 'API\GenderController');
     Route::put('genders-state/{id}', 'API\GenderController@updateState');
+    Route::get('gender-export', 'API\GenderController@dataExport'); //export xlsx
 
     //EntryFilingController
     Route::apiResource('entry-filing', 'API\EntryFilingController');
@@ -92,6 +99,7 @@ Route::group(['auth:sanctum'], function () {
     //CancellationReasonController
     Route::apiResource('cancellation-reasons', 'API\CancellationReasonController');
     Route::put('cancellation-reasons-state/{id}', 'API\CancellationReasonController@updateState');
+    Route::get('cancellation-reasons-export', 'API\CancellationReasonController@dataExport'); //export xlsx
 
     //UpFilesController
     Route::get('get-file/{type}/{filename}/{settled}', 'API\UpFilesController@getFile');

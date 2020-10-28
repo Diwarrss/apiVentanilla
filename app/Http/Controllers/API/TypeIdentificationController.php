@@ -204,4 +204,10 @@ class TypeIdentificationController extends Controller
 
       //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
     }
+
+    public function dataExport()
+    {
+      return TypeIdentification::select('id as ID', 'name as Nombre', 'initials as Iniciales', DB::raw("(CASE state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"),)
+                              ->get();
+    }
 }

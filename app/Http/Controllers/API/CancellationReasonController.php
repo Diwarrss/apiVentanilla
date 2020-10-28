@@ -202,10 +202,14 @@ class CancellationReasonController extends Controller
     }
 
     //download csv
-    public function export()
+   /*  public function export()
     {
       return (new CancellationReasonExport)->download('TypeDocuments.csv', \Maatwebsite\Excel\Excel::CSV);
+    } */
 
-      //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
+    public function dataExport()
+    {
+      return CancellationReason::select('id as ID', 'name as Nombre', DB::raw("(CASE state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"),)
+                              ->get();
     }
 }

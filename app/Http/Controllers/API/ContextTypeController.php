@@ -211,4 +211,10 @@ class ContextTypeController extends Controller
 
       //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
     }
+
+    public function dataExport()
+    {
+      return ContextType::select('id as ID', 'name as Nombre', DB::raw("(CASE state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"),)
+                              ->get();
+    }
 }
