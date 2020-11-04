@@ -18,16 +18,20 @@ Route::middleware('auth:sanctum')->get('v1/user', function (Request $request) {
   return $request->user();
 });
 
-//Cuando el user este autenticado con exito
-Route::group(['auth:sanctum'], function () {
+//Logout Sesion
+Route::group(['prefix' => 'v1'], function () {
+  Route::post('auth/logout', 'Auth\LoginController@logout');
+});
+
+//Router for User Auth Success
+Route::middleware(['auth:sanctum'])->group(function () {
   //Create prefix api/v1
   Route::group(['prefix' => 'v1'], function () {
     //info roles and permissions user Auth
     Route::get('permissions', 'PermissionController');
     Route::get('roles', 'RoleController');
-    Route::post('auth/logout', 'Auth\LoginController@logout');
 
-    //DependenceController d
+    //DependenceController
     Route::apiResource('dependences', 'API\DependenceController');
     Route::put('dependences-state/{id}', 'API\DependenceController@updateState');
     Route::get('dependence-export', 'API\DependenceController@dataExport'); //export xlsx
