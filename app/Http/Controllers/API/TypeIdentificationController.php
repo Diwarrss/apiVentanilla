@@ -89,8 +89,8 @@ class TypeIdentificationController extends Controller
 
         //validations->valida que el nombre y las iniciales no esten creadas en la base de datos
         $request->validate([
-          'name' => 'required|max:200|unique:Type_identifications,name,' . $id,
-          'initials' => 'required|max:5|unique:Type_identifications,initials,' . $id
+          'name' => 'required|max:200|unique:type_identifications,name,' . $id,
+          'initials' => 'required|max:5|unique:type_identifications,initials,' . $id
         ]);
 
         //Add data in table audits
