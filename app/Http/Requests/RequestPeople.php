@@ -24,7 +24,7 @@ class RequestPeople extends FormRequest
     public function rules()
     {
         return [
-          'identification' => 'required|max:20|unique:people',
+          'identification' => 'max:20',
           'names' => 'required',
           'telephone' => 'nullable',
           'address' => 'nullable',

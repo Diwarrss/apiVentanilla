@@ -24,7 +24,7 @@ class RequestDependence extends FormRequest
     public function rules()
     {
       return [
-        'identification' => 'nullable|max:20|unique:dependences',
+        'identification' => 'nullable|max:20',
         'names' => 'required',
         'telephone' => 'nullable',
         'address' => 'nullable',
