@@ -21,9 +21,9 @@ class PersonController extends Controller
     public function index(Request  $request)
     {//retorna la información de la base de datos
       if ($request->active === 'false') {//toda la iformación de la abse de datos
-        return People::all();
+        return People::orderBy('names')->get();
       }
-      return People::where('state', 1)->get();//retorna la los registros con estado 1 (activos)
+      return People::where('state', 1)->orderBy('names')->get();//retorna la los registros con estado 1 (activos)
     }
 
     /**

@@ -23,13 +23,13 @@ class DependenceController extends Controller
     {
         //retorna la información de la base de datos
         if ($request->active === '0') { //retorna toda la informacipon
-          return Dependence::all();
+          return Dependence::orderBy('names')->get();
         }else if ($request->active === '1') { //retorna la información con estado 1->activo
-          return Dependence::where('state', 1)->get();
+          return Dependence::where('state', 1)->orderBy('names')->get();
         }else if ($request->active === '2') { //retorna toda la información activa y con tipo depencencia
-          return Dependence::where([['state', 1 ], [ 'type', 'dependence' ]])->get();
+          return Dependence::where([['state', 1 ], [ 'type', 'dependence' ]])->orderBy('names')->get();
         }else if ($request->active === '3') { //retorna toda la información activa y con tipo persona
-          return Dependence::where([['state', 1 ], [ 'type', 'person' ]])->get();
+          return Dependence::where([['state', 1 ], [ 'type', 'person' ]])->orderBy('names')->get();
         }
     }
 
