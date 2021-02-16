@@ -22,7 +22,7 @@ class ContextTypeController extends Controller
     public function index()
     {
       //retorna la información de la base de datos
-      return ContextType::all();
+      return ContextType::orderBy('name', 'asc')->get();
     }
 
     /**

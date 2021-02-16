@@ -20,7 +20,7 @@ class TypeIdentificationController extends Controller
      */
     public function index()
     {
-      return TypeIdentification::all();//retorna la información de la base de datos
+      return TypeIdentification::orderBy('name', 'asc')->get();//retorna la información de la base de datos
     }
 
     /**

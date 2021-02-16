@@ -22,7 +22,7 @@ class TypeDocumentController extends Controller
      */
     public function index()
     {
-      return TypeDocument::all();
+      return TypeDocument::orderBy('name', 'asc')->get();
     }
 
     /**

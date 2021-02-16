@@ -20,7 +20,7 @@ class PriorityController extends Controller
      */
     public function index()
     {
-        return Priority::all();//retorna la información de la base de datos
+        return Priority::orderBy('name', 'asc')->get();//retorna la información de la base de datos
     }
 
     /**

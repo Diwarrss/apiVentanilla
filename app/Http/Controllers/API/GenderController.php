@@ -20,7 +20,7 @@ class GenderController extends Controller
      */
     public function index()
     {
-        return Gender::all();//retorna la información de la base de datos
+        return Gender::orderBy('name', 'asc')->get();//retorna la información de la base de datos
     }
 
     /**
