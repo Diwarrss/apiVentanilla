@@ -79,7 +79,7 @@ class UpFilesController extends Controller
      */
     public function getFile($type, $filename, $settled )
     {//descargar archivo al equipo local
-      $path = Helper::PublicPath() . '\\storage\\uploads\\'. $type . '\\' . $settled . '\\' . $filename;//captura la ruta del archivo en el servidor
+      $path = Helper::PublicPath() . '/storage/uploads/'. $type . '/' . $settled . '/' . $filename;//captura la ruta del archivo en el servidor
       $header = [
           'Content-Type' => 'application/*',
       ];
