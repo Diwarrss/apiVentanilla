@@ -36,7 +36,7 @@ class DropUniqueIdentificationPeopleTable extends Migration
   {
     Schema::table('people', function (Blueprint $table) {
       $table->string('identification')->unique();
-      $table->string('identification')->nullable(false)->change();;
+      $table->string('identification')->nullable(false)->change();
     });
   }
 }

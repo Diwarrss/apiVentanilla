@@ -114,6 +114,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //SearchFilingController
     Route::apiResource('result-filings', 'API\SearchFilingController');
     Route::get('searchfiling/export', 'API\SearchFilingController@export'); //export xlsx
+
+    //CompanyController
+    Route::post('change-logo', 'API\CompanyController@changeLogo');
   });
+});
+Route::group(['prefix' => 'v1'], function () {
+  Route::apiResource('company', 'API\CompanyController');
 });
 
