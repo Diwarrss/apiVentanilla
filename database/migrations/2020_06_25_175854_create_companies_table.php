@@ -23,6 +23,7 @@ class CreateCompaniesTable extends Migration
             $table->string('phone', 22);
             $table->text('image')->default('/img/company/image.png');
             $table->text('logo')->default('/img/company/logo.png');
+            $table->text('logo_name')->default('logo.png');
             $table->boolean('state');
             $table->enum('type', ["basic","professional","avanced"]);
             $table->unsignedBigInteger('legal_representative_id');
