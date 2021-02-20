@@ -22,7 +22,6 @@ class Dependence extends Model
         'state',
         'type',
         'attachments',
-        'dependence_id',
         'type_identification_id',
         'gender_id',
         'user_id'
@@ -45,17 +44,10 @@ class Dependence extends Model
     protected $casts = [
         'id' => 'integer',
         'state' => 'boolean',
-        'dependence_id' => 'integer',
         'type_identification_id' => 'integer',
         'gender_id' => 'integer',
         'user_id' => 'integer',
     ];
-
-
-    public function dependence()
-    {
-        return $this->belongsTo(\App\Dependence::class);
-    }
 
     public function typeIdentification()
     {

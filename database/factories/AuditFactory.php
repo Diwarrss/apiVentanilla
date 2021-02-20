@@ -14,7 +14,6 @@ $factory->define(Audit::class, function (Faker $faker) {
         'dependence_id' => $faker->numberBetween(-10000, 10000),
         'type_document_id' => $faker->numberBetween(-10000, 10000),
         'priority_id' => $faker->numberBetween(-10000, 10000),
-        'people_id' => $faker->numberBetween(-10000, 10000),
         'context_type_id' => $faker->numberBetween(-10000, 10000),
         'type_identification_id' => $faker->numberBetween(-10000, 10000),
         'gender_id' => $faker->numberBetween(-10000, 10000),

@@ -3,27 +3,23 @@
 namespace App\Http\Controllers\API;
 
 use App\Audit;
-use App\Exports\PeopleExport;
+use App\Exports\TypePeopleExport;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RequestPeople;
-use App\People;
+use App\TypePeople;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class PersonController extends Controller
+class TypePeopleController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request  $request)
-    {//retorna la información de la base de datos
-      if ($request->active === 'false') {//toda la iformación de la abse de datos
-        return People::orderBy('names', 'asc')->get();
-      }
-      return People::where('state', 1)->orderBy('names', 'asc')->get();//retorna la los registros con estado 1 (activos)
+    public function index()
+    {
+      return TypePeople::orderBy('name', 'asc')->get();
     }
 
     /**
@@ -32,22 +28,21 @@ class PersonController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(RequestPeople $request)
+    public function store(Request $request)
     {
       try {
         DB::beginTransaction();
 
         $data = $request->all();//captura los parametros q vienen en la petición
         $data['user_id'] = Auth::user()->id;/* trae el usuario q esta autenticado */
-        $people = People::create($data);//Guarda la informacion del nuevo registro
-
+        $typePeople = TypePeople::create($data);//Guarda la informacion del nuevo registro
         DB::commit(); //commit de la transaccion
 
-        if ($people) {//respuesta exitosa
+        if ($typePeople) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Creado con éxito',
-            'data' => $people
+            'data' => $typePeople
           ], 201);
         }else{//respuesta de error
           return response()->json([
@@ -85,45 +80,40 @@ class PersonController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {//actualiza la infomracion del registro especifico
+    {
       try {
         DB::beginTransaction();
 
-        $people = People::find($id);//Busca registro por ID
-        //validations->valida q no exista el registro con la misma identificación
+        $typePeople = TypePeople::find($id);//captura los parametros q vienen en la petición
+
+        //valida que el nombre no este creado en la base de datos
         $request->validate([
-          'identification' => 'required|max:20|unique:people,identification,' . $id
+          'name' => 'required|max:100|unique:type_people,name,' . $id
         ]);
 
         //Add data in table audits
         $audit = Audit::create([
-          'table' => 'people',
+          'table' => 'type_people',
           'action' => 'update',
-          'data_id' => $people->id,
-          'people_id' => $people->id,
-          'all_data' => json_encode($people),
+          'data_id' => $typePeople->id,
+          'type_people_id' => $typePeople->id,
+          'all_data' => json_encode($typePeople),
           'user_id' => Auth::user()->id
         ]);
 
         //actualiza la infomracion del registro especifico
-        $people->identification = $request->identification;
-        $people->names = $request->names;
-        $people->telephone = $request->telephone;
-        $people->address = $request->address;
-        $people->email = $request->email;
-        $people->state = $request->state;
-        $people->type = $request->type;
-        $people->people_id = $request->people_id;
-        $people->type_identification_id = $request->type_identification_id;
-        $people->gender_id = $request->gender_id;
-        $people->save();
+        $typePeople->name = $request->name;
+        $typePeople->state = $request->state;
+        $typePeople->type = $request->type;
+        $typePeople->save();//Guarda la informacion del registro
+
         DB::commit(); //commit de la transaccion
 
-        if ($people) {//respuesta exitosa
+        if ($typePeople) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
-            'data' => $people
+            'data' => $typePeople
           ], 202);
         }else{//respuesta de error
           return response()->json([
@@ -132,7 +122,7 @@ class PersonController extends Controller
             'data' => []
           ], 204);
         }
-      } catch (Exception $e) { //error en el proceso
+      } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
           'message' => 'Error al actualizar',
@@ -147,33 +137,33 @@ class PersonController extends Controller
       try {
         DB::beginTransaction();
 
-        $people = People::find($id);//Busca registro por ID
+        $typePeople = TypePeople::find($id);//Busca registro por ID
 
         //cambia el estado del registro
-        if ($people->state) {
-          $people->state = false;
+        if ($typePeople->state) {
+          $typePeople->state = false;
         }else {
-          $people->state = true;
+          $typePeople->state = true;
         }
-        $people->save();//guarda el estado del registro
+        $typePeople->save();//guarda el estado del registro
 
         //Add data in table audits
         $audit = Audit::create([
-          'table' => 'people',
-          'action' => $people->state ? 'disable' : 'enable',
-          'data_id' => $people->id,
-          'people_id' => $people->id,
-          'all_data' => json_encode($people),
+          'table' => 'type_people',
+          'action' => $typePeople->state ? 'disable' : 'enable',
+          'data_id' => $typePeople->id,
+          'type_people_id' => $typePeople->id,
+          'all_data' => json_encode($typePeople),
           'user_id' => Auth::user()->id
         ]);
 
         DB::commit(); //commit de la transaccion
 
-        if ($people) {//respuesta exitosa
+        if ($typePeople) {//respuesta exitosa
           return response()->json([
             'type' => 'success',
             'message' => 'Actualizado con éxito',
-            'data' => $people->state
+            'data' => $typePeople->state
           ], 202);
         }else{//respuesta de error
           return response()->json([
@@ -182,6 +172,7 @@ class PersonController extends Controller
             'data' => []
           ], 204);
         }
+
       } catch (Exception $e) {//error en el proceso
         return response()->json([
           'type' => 'error',
@@ -206,14 +197,14 @@ class PersonController extends Controller
     //download csv
     public function export()
     {
-      return (new PeopleExport)->download('People.csv', \Maatwebsite\Excel\Excel::CSV);
+      return (new TypePeopleExport)->download('TypeDocuments.csv', \Maatwebsite\Excel\Excel::CSV);
 
       //return Excel::download(new TypeDocumentExport, 'TypeDocuments.csv');
     }
 
     public function dataExport()
     {
-      return People::select('id as ID', 'identification as Identificación', 'names as Nombre', 'telephone as Telefono', 'address as Dirección', 'email as Email', DB::raw("(CASE state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), DB::raw("(CASE type WHEN 'person' THEN 'Persona' ELSE 'Compañia' END) AS Tipo"))
-                      ->get();
+      return TypePeople::select('id as ID', 'name as Nombre', DB::raw("(CASE state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"),)
+                              ->get();
     }
 }

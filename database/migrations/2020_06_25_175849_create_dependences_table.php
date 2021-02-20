@@ -23,8 +23,6 @@ class CreateDependencesTable extends Migration
             $table->boolean('state');
             $table->enum('type', ["dependence","person"]);
             $table->text('attachments')->nullable();
-            $table->unsignedBigInteger('dependence_id')->nullable();
-            $table->foreign('dependence_id')->references('id')->on('dependences')->onDelete('cascade');
             $table->unsignedBigInteger('type_identification_id')->nullable();
             $table->foreign('type_identification_id')->references('id')->on('type_identifications')->onDelete('cascade');
             $table->unsignedBigInteger('gender_id')->nullable();

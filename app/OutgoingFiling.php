@@ -87,9 +87,9 @@ class OutgoingFiling extends Model
         return $this->belongsTo(\App\Dependence::class);
     }
 
-    public function people()
+    public function dependences()
     {
-        return $this->belongsToMany(\App\People::class, 'outgoing_filing_has_people');
+        return $this->belongsToMany(\App\Dependence::class, 'outgoing_filing_has_dependences');
     }
 
     public function upFiles()

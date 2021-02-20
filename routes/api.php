@@ -47,11 +47,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('priorities-state/{id}', 'API\PriorityController@updateState' );
     Route::get('priority-export', 'API\PriorityController@dataExport'); //export xlsx
 
-    //PersonController
-    Route::apiResource('people', 'API\PersonController');
-    Route::put('people-state/{id}', 'API\PersonController@updateState');
-    Route::get('person-export', 'API\PersonController@dataExport'); //export xlsx
-
     //ContextTypeController context-type-export
     Route::apiResource('context-types', 'API\ContextTypeController');
     Route::put('context-types-state/{id}', 'API\ContextTypeController@updateState');
@@ -118,6 +113,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //CompanyController
     Route::post('change-image-company', 'API\CompanyController@changeImage');
     Route::post('change-logo-company', 'API\CompanyController@changeLogo');
+
+    //TypePeopleController
+    Route::apiResource('type-people', 'API\TypePeopleController');
+    Route::put('type-people-state/{id}', 'API\TypePeopleController@updateState');
+    Route::get('type-people-export', 'API\TypePeopleController@dataExport'); //export xlsx
+    //Route::get('type-people/export', 'API\TypeDocumentController@export'); //for download excel o csv
   });
 });
 Route::group(['prefix' => 'v1'], function () {

@@ -79,7 +79,7 @@
       </thead>
       <tbody>
           @foreach($outgoingFiling ?? '' as $data)
-            @foreach ($data->people as $item)
+            @foreach ($data->dependences as $item)
               <tr>
                 <td>{{ $data->settled }}</td>
                 <td>{{ $data->created_at }}</td>

@@ -25,7 +25,6 @@ class User extends Authenticatable
         'state',
         'firm',
         'image',
-        'people_id',
         'dependence_id',
         'dependencePerson_id'
     ];

@@ -10,7 +10,6 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use App\EntryFilingHasDependence;
 use App\Exports\EntryFilingExport;
-use App\People;
 use App\UpFile;
 use DateTime;
 use PDF;
@@ -51,7 +50,7 @@ class EntryFilingController extends Controller
           'dependences',
           'TypeDocument:id,name',
           'ContextType:id,name',
-          'People:id,names',
+          'dependence:id,names',
           'Priority:id,name'
           )
           ->where('state', 1)
@@ -64,11 +63,10 @@ class EntryFilingController extends Controller
         'dependences',
         'TypeDocument:id,name',
         'ContextType:id,name',
-        'People:id,names',
+        'dependence:id,names',
         'Priority:id,name'
         )
         ->where('state', 1)
-        ->whereDate('created_at', now())
         ->get();
     }
 
@@ -157,7 +155,7 @@ class EntryFilingController extends Controller
         'dependences',
         'TypeDocument:id,name',
         'ContextType:id,name',
-        'People:id,names',
+        'dependence:id,names',
         'Priority:id,name'
       )->find($id);
     }
@@ -432,7 +430,7 @@ class EntryFilingController extends Controller
           'dependences',
           'TypeDocument:id,name',
           'ContextType:id,name',
-          'People:id,names',
+          'dependence:id,names',
           'Priority:id,name'
           )
           ->where('state', 1)
@@ -444,13 +442,14 @@ class EntryFilingController extends Controller
           'dependences',
           'TypeDocument:id,name',
           'ContextType:id,name',
-          'People:id,names',
+          'dependence:id,names',
           'Priority:id,name'
           )
           ->where('state', 1)
           ->whereDate('created_at', now())
           ->get();
       }
+      //return $entryFiling;
       // share data to view
       view()->share('entryFiling', $entryFiling);
       $date = Carbon::now();
@@ -471,26 +470,20 @@ class EntryFilingController extends Controller
     public function export(Request $request)
     {
       if ($request->fromDate && $request->toDate) {
-        return EntryFiling::Join ('people', 'entry_filings.people_id', '=', 'people.id')
+        return EntryFiling::Join ('dependences as rem', 'entry_filings.dependence_id', '=', 'rem.id')
                         ->join('entry_filing_has_dependences', 'entry_filing_has_dependences.entry_filing_id', '=', 'entry_filings.id')
                         ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
                         ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
-                        ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'people.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                        ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'rem.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                         ->whereBetween('entry_filings.created_at', [$request->fromDate, $request->toDate])
                         ->where('entry_filings.state', 1)
                         ->get();
-        /* return EntryFiling::with(
-          'dependences',
-          'People:id,names'
-          )
-          ->where('state', 1)
-          ->whereBetween('created_at', [$request->fromDate, $request->toDate]); */
       } else {
-        return EntryFiling::Join ('people', 'entry_filings.people_id', '=', 'people.id')
+        return EntryFiling::Join ('dependences as rem', 'entry_filings.dependence_id', '=', 'rem.id')
                         ->join('entry_filing_has_dependences', 'entry_filing_has_dependences.entry_filing_id', '=', 'entry_filings.id')
                         ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
                         ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
-                        ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'people.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                        ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'rem.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                         ->whereDate('entry_filings.created_at', now())
                         ->where('entry_filings.state', 1)
                         ->get();

@@ -155,6 +155,34 @@ class RolesAndPermissionsSeeder extends Seeder
         array_push($permissionsAdmin_array, $exportDocumentType);
         array_push($permissionsManager_array, $exportDocumentType);
 
+        $createPeopleType = Permission::create([
+            'name' => 'create_people_type',
+            'title' => 'crear_tipo_persona'
+        ]);
+        array_push($permissionsAdmin_array, $createPeopleType);
+        array_push($permissionsManager_array, $createPeopleType);
+
+        $editPeopleType = Permission::create([
+            'name' => 'edit_people_type',
+            'title' => 'editar_tipo_persona'
+        ]);
+        array_push($permissionsAdmin_array, $editPeopleType);
+        array_push($permissionsManager_array, $editPeopleType);
+
+        $changePeopleTypeStatus = Permission::create([
+            'name' => 'change_people_type_status',
+            'title' => 'cambiar_estado_tipo_persona'
+        ]);
+        array_push($permissionsAdmin_array, $changePeopleTypeStatus);
+        array_push($permissionsManager_array, $changePeopleTypeStatus);
+
+        $exportPeopleType = Permission::create([
+            'name' => 'export_people_type',
+            'title' => 'exportar_tipo_persona'
+        ]);
+        array_push($permissionsAdmin_array, $exportPeopleType);
+        array_push($permissionsManager_array, $exportPeopleType);
+
         $createPrirority = Permission::create([
             'name' => 'create_prirority',
             'title' => 'crear_prioridades'
@@ -182,34 +210,6 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
         array_push($permissionsAdmin_array, $exportPriority);
         array_push($permissionsManager_array, $exportPriority);
-
-        $createPeople = Permission::create([
-            'name' => 'create_people',
-            'title' => 'crear_remitentes'
-        ]);
-        array_push($permissionsAdmin_array, $createPeople);
-        array_push($permissionsManager_array, $createPeople);
-
-        $editPeople = Permission::create([
-            'name' => 'edit_people',
-            'title' => 'editar_remitentes'
-        ]);
-        array_push($permissionsAdmin_array, $editPeople);
-        array_push($permissionsManager_array, $editPeople);
-
-        $changePeopleStatus = Permission::create([
-            'name' => 'change_people_status',
-            'title' => 'cambiar_estado_remitentes'
-        ]);
-        array_push($permissionsAdmin_array, $changePeopleStatus);
-        array_push($permissionsManager_array, $changePeopleStatus);
-
-        $exportPeople = Permission::create([
-            'name' => 'export_people',
-            'title' => 'exportar_personas'
-        ]);
-        array_push($permissionsAdmin_array, $exportPeople);
-        array_push($permissionsManager_array, $exportPeople);
 
         $createContextType = Permission::create([
             'name' => 'create_context_type',
@@ -422,6 +422,20 @@ class RolesAndPermissionsSeeder extends Seeder
             'title' => 'cambiar_estado_usuarios'
         ]);
         array_push($permissionsAdmin_array, $changeUserStatus);
+
+        $printStamp = Permission::create([
+          'name' => 'print_stamp',
+          'guard_name' => 'web',
+          'title' => 'imprimir_sello_radicado'
+        ]);
+        array_push($permissionsAdmin_array, $printStamp);
+
+        $newPersonFromSettled = Permission::create([
+          'name' => 'new_person_from_settled',
+          'guard_name' => 'web',
+          'title' => 'crear_persona_desde_radicado'
+        ]);
+        array_push($permissionsAdmin_array, $newPersonFromSettled);
 
         /* $role->givePermissionTo($permission);    asignar 1 solo permiso
         $role->syncPermissions($permissions);   asignar multiples permisos */

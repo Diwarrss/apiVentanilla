@@ -25,8 +25,6 @@ class CreateAuditsTable extends Migration
             $table->foreign('type_document_id')->references('id')->on('type_documents')->onDelete('cascade');
             $table->unsignedBigInteger('priority_id')->nullable();
             $table->foreign('priority_id')->references('id')->on('priorities')->onDelete('cascade');
-            $table->unsignedBigInteger('people_id')->nullable();
-            $table->foreign('people_id')->references('id')->on('people')->onDelete('cascade');
             $table->unsignedBigInteger('context_type_id')->nullable();
             $table->foreign('context_type_id')->references('id')->on('context_types')->onDelete('cascade');
             $table->unsignedBigInteger('type_identification_id')->nullable();
@@ -41,6 +39,8 @@ class CreateAuditsTable extends Migration
             $table->foreign('outgoing_filing_id')->references('id')->on('outgoing_filings')->onDelete('cascade');
             $table->unsignedBigInteger('cancellation_reason_id')->nullable();
             $table->foreign('cancellation_reason_id')->references('id')->on('cancellation_reasons')->onDelete('cascade');
+            $table->unsignedBigInteger('type_people_id')->nullable();
+            $table->foreign('type_people_id')->references('id')->on('type_people')->onDelete('cascade');
             $table->Integer('up_file_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

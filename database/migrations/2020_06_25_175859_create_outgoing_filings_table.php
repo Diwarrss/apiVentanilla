@@ -34,8 +34,6 @@ class CreateOutgoingFilingsTable extends Migration
             $table->foreign('campus_id')->references('id')->on('campuses')->onDelete('cascade');
             $table->unsignedBigInteger('priority_id');
             $table->foreign('priority_id')->references('id')->on('priorities')->onDelete('cascade');
-           /*  $table->unsignedBigInteger('people_id');
-            $table->foreign('people_id')->references('id')->on('people')->onDelete('cascade'); */
             $table->unsignedBigInteger('type_document_id');
             $table->foreign('type_document_id')->references('id')->on('type_documents')->onDelete('cascade');
             $table->unsignedBigInteger('context_type_id');

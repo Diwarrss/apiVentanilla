@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PrioritiesTableSeeder::class);
         $this->call(TypeDocumentsTableSeeder::class);
         $this->call(TypeIdentificationsTableSeeder::class);
+        $this->call(TypePeopleSeeder::class);
         factory('App\LegalRepresentative', 2)->create();
         factory('App\Company', 1)->create();
     }

@@ -28,7 +28,7 @@ class SearchFilingController extends Controller
               'dependences',
               'TypeDocument:id,name',
               'ContextType:id,name',
-              'People:id,names',
+              'dependence:id,names',
               'Priority:id,name'
               )
               ->whereHas('dependences', function($query) use ($user, $userDependence)  {//condicion en la relación
@@ -45,7 +45,7 @@ class SearchFilingController extends Controller
               'dependences',
               'TypeDocument:id,name',
               'ContextType:id,name',
-              'People:id,names',
+              'dependence:id,names',
               'Priority:id,name'
               )
               ->whereHas('dependences', function($query) use ($user, $userDependence)  {//condicion en la relación
@@ -61,7 +61,7 @@ class SearchFilingController extends Controller
           if ($request->fromDate && $request->toDate) {//retorna l a información que este en dos rangos de fecha especificos
             return OutgoingFiling::with(
               'upFiles',
-              'people',
+              'dependences',
               'TypeDocument:id,name',
               'ContextType:id,name',
               'dependence:id,names',
@@ -74,7 +74,7 @@ class SearchFilingController extends Controller
           } else {//retorna l a información que tenga fecha de hoy
             return OutgoingFiling::with(
               'upFiles',
-              'people',
+              'dependences',
               'TypeDocument:id,name',
               'ContextType:id,name',
               'dependence:id,names',
@@ -106,7 +106,7 @@ class SearchFilingController extends Controller
         //Revisa el parámetro sender para llenar el array de su respectiva condicion
         if ($request->sender) {
           if ($request->type === "0") {
-            $sender = ['people_id', '=', $request->sender];
+            $sender = ['dependence_id', '=', $request->sender];
             array_push($matchThese, $sender);
           } else if ($request->type === "1") {
             $sender = ['dependence_id', '=', $request->sender];
@@ -121,7 +121,7 @@ class SearchFilingController extends Controller
               'dependences',
               'TypeDocument:id,name',
               'ContextType:id,name',
-              'People:id,names',
+              'dependence:id,names',
               'Priority:id,name'
               )
               ->where('settled', $request->setledSearch)
@@ -136,7 +136,7 @@ class SearchFilingController extends Controller
                 'dependences',
                 'TypeDocument:id,name',
                 'ContextType:id,name',
-                'People:id,names',
+                'dependence:id,names',
                 'Priority:id,name'
                 )
                 ->whereHas('dependences', function($query) use ($addressee_id)  {//condicion de la relacion de las tablas
@@ -153,7 +153,7 @@ class SearchFilingController extends Controller
                 'dependences',
                 'TypeDocument:id,name',
                 'ContextType:id,name',
-                'People:id,names',
+                'dependence:id,names',
                 'Priority:id,name'
                 )
                 ->whereHas('dependences', function($query) use ($addressee_id)  {//condicion de la relacion de las tablas
@@ -174,7 +174,7 @@ class SearchFilingController extends Controller
                 'dependences',
                 'TypeDocument:id,name',
                 'ContextType:id,name',
-                'People:id,names',
+                'dependence:id,names',
                 'Priority:id,name'
                 )
                 ->where($matchThese)
@@ -187,7 +187,7 @@ class SearchFilingController extends Controller
                 'dependences',
                 'TypeDocument:id,name',
                 'ContextType:id,name',
-                'People:id,names',
+                'dependence:id,names',
                 'Priority:id,name'
                 )
                 ->where($matchThese)
@@ -203,7 +203,7 @@ class SearchFilingController extends Controller
               'dependences',
               'TypeDocument:id,name',
               'ContextType:id,name',
-              'People:id,names',
+              'dependence:id,names',
               'Priority:id,name'
               )
               ->where($matchThese)
@@ -216,7 +216,7 @@ class SearchFilingController extends Controller
               'dependences',
               'TypeDocument:id,name',
               'ContextType:id,name',
-              'People:id,names',
+              'dependence:id,names',
               'Priority:id,name'
               )
               ->where($matchThese)
@@ -229,7 +229,7 @@ class SearchFilingController extends Controller
             //retorna la informacion que pertenece al numero de radicado
             return OutgoingFiling::with(
               'upFiles',
-              'people',
+              'dependences',
               'TypeDocument:id,name',
               'ContextType:id,name',
               'dependence:id,names',
@@ -244,14 +244,14 @@ class SearchFilingController extends Controller
             if ($request->fromDate && $request->toDate) {
               return OutgoingFiling::with(
                 'upFiles',
-                'people',
+                'dependences',
                 'TypeDocument:id,name',
                 'ContextType:id,name',
                 'dependence:id,names',
                 'Priority:id,name'
                 )
-                ->whereHas('people', function($query) use ($addressee_id)  {//condicion en una relacion de la base de datos
-                  $query->where('outgoing_filing_has_people.people_id', $addressee_id);
+                ->whereHas('dependences', function($query) use ($addressee_id)  {//condicion en una relacion de la base de datos
+                  $query->where('outgoing_filing_has_dependences.dependence_id', $addressee_id);
                 })
                 ->where($matchThese)
                 ->where('state', 1)
@@ -260,14 +260,14 @@ class SearchFilingController extends Controller
             } else {
               return OutgoingFiling::with(
                 'upFiles',
-                'people',
+                'dependences',
                 'TypeDocument:id,name',
                 'ContextType:id,name',
                 'dependence:id,names',
                 'Priority:id,name'
                 )
-                ->whereHas('people', function($query) use ($addressee_id)  {//condicion en una relacion de la base de datos
-                  $query->where('outgoing_filing_has_people.people_id', $addressee_id);
+                ->whereHas('dependences', function($query) use ($addressee_id)  {//condicion en una relacion de la base de datos
+                  $query->where('outgoing_filing_has_dependences.dependence_id', $addressee_id);
                 })
                 ->where($matchThese)
                 ->where('state', 1)
@@ -280,7 +280,7 @@ class SearchFilingController extends Controller
             if ($request->fromDate && $request->toDate) {
               return OutgoingFiling::with(
                 'upFiles',
-                'people',
+                'dependences',
                 'TypeDocument:id,name',
                 'ContextType:id,name',
                 'dependence:id,names',
@@ -293,7 +293,7 @@ class SearchFilingController extends Controller
             } else {
               return OutgoingFiling::with(
                 'upFiles',
-                'people',
+                'dependences',
                 'TypeDocument:id,name',
                 'ContextType:id,name',
                 'dependence:id,names',
@@ -309,7 +309,7 @@ class SearchFilingController extends Controller
           if ($request->fromDate && $request->toDate) {
             return OutgoingFiling::with(
               'upFiles',
-              'people',
+              'dependences',
               'TypeDocument:id,name',
               'ContextType:id,name',
               'dependence:id,names',
@@ -322,7 +322,7 @@ class SearchFilingController extends Controller
           } else {
             return OutgoingFiling::with(
               'upFiles',
-              'people',
+              'dependences',
               'TypeDocument:id,name',
               'ContextType:id,name',
               'dependence:id,names',
@@ -404,7 +404,7 @@ class SearchFilingController extends Controller
       //Revisa el parámetro sender para llenar el array de su respectiva condicion
       if ($request->sender) {
         if ($request->type === "0") {
-          $sender = ['entry_filings.people_id', '=', $request->sender];
+          $sender = ['entry_filings.dependence_id', '=', $request->sender];
           array_push($matchThese, $sender);
         } else if ($request->type === "1") {
           $sender = ['outgoing_filings.dependence_id', '=', $request->sender];
@@ -413,33 +413,33 @@ class SearchFilingController extends Controller
       }
       if ($request->type === "0") { //type=0 es para radicacion de entrada
         if ($request->setledSearch) {
-          return EntryFiling::Join ('people', 'entry_filings.people_id', '=', 'people.id')
+          return EntryFiling::Join ('dependence', 'entry_filings.dependence_id', '=', 'dependence.id')
                           ->join('entry_filing_has_dependences', 'entry_filing_has_dependences.entry_filing_id', '=', 'entry_filings.id')
                           ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
-                          ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'people.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                          ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'dependence.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->where('entry_filings.state', 1)
                           ->where('settled', $request->setledSearch)
                           ->get();
         }
         if ($request->addressee) {
           if ($request->fromDate != $request->toDate) {
-            return EntryFiling::Join ('people', 'entry_filings.people_id', '=', 'people.id')
+            return EntryFiling::Join ('dependence', 'entry_filings.dependence_id', '=', 'dependence.id')
                           ->join('entry_filing_has_dependences', 'entry_filing_has_dependences.entry_filing_id', '=', 'entry_filings.id')
                           ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
-                          ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'people.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                          ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'dependence.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->whereBetween('entry_filings.created_at', [$request->fromDate, $request->toDate])
                           ->where('entry_filing_has_dependences.dependence_id', $addressee_id)
                           ->where($matchThese)
                           ->where('entry_filings.state', 1)
                           ->get();
           } else {
-            return EntryFiling::Join ('people', 'entry_filings.people_id', '=', 'people.id')
+            return EntryFiling::Join ('dependence', 'entry_filings.dependence_id', '=', 'dependence.id')
                           ->join('entry_filing_has_dependences', 'entry_filing_has_dependences.entry_filing_id', '=', 'entry_filings.id')
                           ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
-                          ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'people.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                          ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'dependence.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           /* ->whereBetween('entry_filings.created_at', [$request->fromDate, $request->toDate]) */
                           ->where('entry_filing_has_dependences.dependence_id', $addressee_id)
                           ->where($matchThese)
@@ -449,21 +449,21 @@ class SearchFilingController extends Controller
         }
         if ($request->title || $request->typeDocument || $request->sender) {
           if ($request->fromDate && $request->toDate) {
-            return EntryFiling::Join ('people', 'entry_filings.people_id', '=', 'people.id')
+            return EntryFiling::Join ('dependence', 'entry_filings.dependence_id', '=', 'dependence.id')
                           ->join('entry_filing_has_dependences', 'entry_filing_has_dependences.entry_filing_id', '=', 'entry_filings.id')
                           ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
-                          ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'people.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                          ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'dependence.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->whereBetween('entry_filings.created_at', [$request->fromDate, $request->toDate])
                           ->where('entry_filings.state', 1)
                           ->where($matchThese)
                           ->get();
           } else {
-            return EntryFiling::Join ('people', 'entry_filings.people_id', '=', 'people.id')
+            return EntryFiling::Join ('dependence', 'entry_filings.dependence_id', '=', 'dependence.id')
                           ->join('entry_filing_has_dependences', 'entry_filing_has_dependences.entry_filing_id', '=', 'entry_filings.id')
                           ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
-                          ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'people.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                          ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'dependence.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           //->whereBetween('entry_filings.created_at', [$request->fromDate, $request->toDate])
                           ->where('entry_filings.state', 1)
                           ->where($matchThese)
@@ -471,20 +471,20 @@ class SearchFilingController extends Controller
           }
         }
         if ($request->fromDate && $request->toDate) {
-          return EntryFiling::Join ('people', 'entry_filings.people_id', '=', 'people.id')
+          return EntryFiling::Join ('dependence', 'entry_filings.dependence_id', '=', 'dependence.id')
                           ->join('entry_filing_has_dependences', 'entry_filing_has_dependences.entry_filing_id', '=', 'entry_filings.id')
                           ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
-                          ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'people.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                          ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'dependence.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->whereBetween('entry_filings.created_at', [$request->fromDate, $request->toDate])
                           ->where('entry_filings.state', 1)
                           ->get();
         } else {
-          return EntryFiling::Join ('people', 'entry_filings.people_id', '=', 'people.id')
+          return EntryFiling::Join ('dependence', 'entry_filings.dependence_id', '=', 'dependence.id')
                           ->join('entry_filing_has_dependences', 'entry_filing_has_dependences.entry_filing_id', '=', 'entry_filings.id')
                           ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
-                          ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'people.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                          ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'dependence.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->whereDate('entry_filings.created_at', now())
                           ->where('entry_filings.state', 1)
                           ->get();
@@ -492,10 +492,10 @@ class SearchFilingController extends Controller
       } else if ($request->type === "1") { //type=1 es para radicacion de salida
         if ($request->setledSearch) {
           return OutgoingFiling::Join ('dependences', 'outgoing_filings.dependence_id', '=', 'dependences.id')
-                          ->join('outgoing_filing_has_people', 'outgoing_filing_has_people.outgoing_filing_id', '=', 'outgoing_filings.id')
-                          ->join('people', 'people.id', '=', 'outgoing_filing_has_people.people_id')
+                          ->join('outgoing_filing_has_dependences', 'outgoing_filing_has_dependences.outgoing_filing_id', '=', 'outgoing_filings.id')
+                          ->join('dependences', 'dependences.id', '=', 'outgoing_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'outgoing_filings.type_document_id', '=', 'type_documents.id')
-                          ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'people.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                          ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           //->whereBetween('outgoing_filings.created_at', [$request->fromDate, $request->toDate])
                           ->where('settled', $request->setledSearch)
                           ->where('outgoing_filings.state', 1)
@@ -505,23 +505,23 @@ class SearchFilingController extends Controller
           //retorna la informacion que pertenece al destinatario
           if ($request->fromDate && $request->toDate) {
             return OutgoingFiling::Join ('dependences', 'outgoing_filings.dependence_id', '=', 'dependences.id')
-                          ->join('outgoing_filing_has_people', 'outgoing_filing_has_people.outgoing_filing_id', '=', 'outgoing_filings.id')
-                          ->join('people', 'people.id', '=', 'outgoing_filing_has_people.people_id')
+                          ->join('outgoing_filing_has_dependences', 'outgoing_filing_has_dependences.outgoing_filing_id', '=', 'outgoing_filings.id')
+                          ->join('dependences', 'dependences.id', '=', 'outgoing_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'outgoing_filings.type_document_id', '=', 'type_documents.id')
-                          ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'people.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                          ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->whereBetween('outgoing_filings.created_at', [$request->fromDate, $request->toDate])
-                          ->where('outgoing_filing_has_people.people_id', $addressee_id)
+                          ->where('outgoing_filing_has_dependences.dependence_id', $addressee_id)
                           ->where($matchThese)
                           ->where('outgoing_filings.state', 1)
                           ->get();
           } else {
             return OutgoingFiling::Join ('dependences', 'outgoing_filings.dependence_id', '=', 'dependences.id')
-                          ->join('outgoing_filing_has_people', 'outgoing_filing_has_people.outgoing_filing_id', '=', 'outgoing_filings.id')
-                          ->join('people', 'people.id', '=', 'outgoing_filing_has_people.people_id')
+                          ->join('outgoing_filing_has_dependences', 'outgoing_filing_has_dependences.outgoing_filing_id', '=', 'outgoing_filings.id')
+                          ->join('dependences', 'dependences.id', '=', 'outgoing_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'outgoing_filings.type_document_id', '=', 'type_documents.id')
-                          ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'people.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                          ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           //->whereBetween('outgoing_filings.created_at', [$request->fromDate, $request->toDate])
-                          ->where('outgoing_filing_has_people.people_id', $addressee_id)
+                          ->where('outgoing_filing_has_dependences.dependence_id', $addressee_id)
                           ->where($matchThese)
                           ->where('outgoing_filings.state', 1)
                           ->get();
@@ -531,20 +531,20 @@ class SearchFilingController extends Controller
         if ($request->title || $request->typeDocument || $request->sender) {
           if ($request->fromDate && $request->toDate) {
             return OutgoingFiling::Join ('dependences', 'outgoing_filings.dependence_id', '=', 'dependences.id')
-                          ->join('outgoing_filing_has_people', 'outgoing_filing_has_people.outgoing_filing_id', '=', 'outgoing_filings.id')
-                          ->join('people', 'people.id', '=', 'outgoing_filing_has_people.people_id')
+                          ->join('outgoing_filing_has_dependences', 'outgoing_filing_has_dependences.outgoing_filing_id', '=', 'outgoing_filings.id')
+                          ->join('dependences', 'dependences.id', '=', 'outgoing_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'outgoing_filings.type_document_id', '=', 'type_documents.id')
-                          ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'people.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                          ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->whereBetween('outgoing_filings.created_at', [$request->fromDate, $request->toDate])
                           ->where($matchThese)
                           ->where('outgoing_filings.state', 1)
                           ->get();
           } else {
             return OutgoingFiling::Join ('dependences', 'outgoing_filings.dependence_id', '=', 'dependences.id')
-                          ->join('outgoing_filing_has_people', 'outgoing_filing_has_people.outgoing_filing_id', '=', 'outgoing_filings.id')
-                          ->join('people', 'people.id', '=', 'outgoing_filing_has_people.people_id')
+                          ->join('outgoing_filing_has_dependences', 'outgoing_filing_has_dependences.outgoing_filing_id', '=', 'outgoing_filings.id')
+                          ->join('dependences', 'dependences.id', '=', 'outgoing_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'outgoing_filings.type_document_id', '=', 'type_documents.id')
-                          ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'people.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                          ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           //->whereBetween('outgoing_filings.created_at', [$request->fromDate, $request->toDate])
                           ->where($matchThese)
                           ->where('outgoing_filings.state', 1)
@@ -553,19 +553,19 @@ class SearchFilingController extends Controller
         }
         if ($request->fromDate && $request->toDate) {
           return OutgoingFiling::Join ('dependences', 'outgoing_filings.dependence_id', '=', 'dependences.id')
-                          ->join('outgoing_filing_has_people', 'outgoing_filing_has_people.outgoing_filing_id', '=', 'outgoing_filings.id')
-                          ->join('people', 'people.id', '=', 'outgoing_filing_has_people.people_id')
+                          ->join('outgoing_filing_has_dependences', 'outgoing_filing_has_dependences.outgoing_filing_id', '=', 'outgoing_filings.id')
+                          ->join('dependences', 'dependences.id', '=', 'outgoing_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'outgoing_filings.type_document_id', '=', 'type_documents.id')
-                          ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'people.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                          ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->whereBetween('outgoing_filings.created_at', [$request->fromDate, $request->toDate])
                           ->where('outgoing_filings.state', 1)
                           ->get();
         } else {
           return OutgoingFiling::Join ('dependences', 'outgoing_filings.dependence_id', '=', 'dependences.id')
-                          ->join('outgoing_filing_has_people', 'outgoing_filing_has_people.outgoing_filing_id', '=', 'outgoing_filings.id')
-                          ->join('people', 'people.id', '=', 'outgoing_filing_has_people.people_id')
+                          ->join('outgoing_filing_has_dependences', 'outgoing_filing_has_dependences.outgoing_filing_id', '=', 'outgoing_filings.id')
+                          ->join('dependences', 'dependences.id', '=', 'outgoing_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'outgoing_filings.type_document_id', '=', 'type_documents.id')
-                          ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'people.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                          ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->whereDate('outgoing_filings.created_at', now())
                           ->where('outgoing_filings.state', 1)
                           ->get();

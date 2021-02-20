@@ -63,23 +63,17 @@ class EntryFilingExport implements FromQuery, WithHeadings, WithMapping, WithCol
       //return DB::table('type_documents')->get();
       //return TypeDocument::select('type_documents.id', 'type_documents.name', 'type_documents.state', 'type_documents.created_at')->get();
       if ($this->fromDate != $this->toDate) {
-        return EntryFiling::Join ('people', 'entry_filings.people_id', '=', 'people.id')
+        return EntryFiling::Join ('dependences', 'entry_filings.dependence_id', '=', 'dependences.id')
                         ->join('entry_filing_has_dependences', 'entry_filing_has_dependences.entry_filing_id', '=', 'entry_filings.id')
                         ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
-                        ->select('entry_filings.id', 'entry_filings.settled', 'entry_filings.created_at', 'entry_filings.state', 'people.names as p_names', 'dependences.names as d_names')
+                        ->select('entry_filings.id', 'entry_filings.settled', 'entry_filings.created_at', 'entry_filings.state', 'dependences.names as p_names', 'dependences.names as d_names')
                         ->whereBetween('entry_filings.created_at', [$this->fromDate, $this->toDate])
                         ->where('entry_filings.state', 1);
-        /* return EntryFiling::with(
-          'dependences',
-          'People:id,names'
-          )
-          ->where('state', 1)
-          ->whereBetween('created_at', [$this->fromDate, $this->toDate]); */
       } else {
-        return EntryFiling::Join ('people', 'entry_filings.people_id', '=', 'people.id')
+        return EntryFiling::Join ('dependences', 'entry_filings.dependence_id', '=', 'dependences.id')
                         ->join('entry_filing_has_dependences', 'entry_filing_has_dependences.entry_filing_id', '=', 'entry_filings.id')
                         ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
-                        ->select('entry_filings.id', 'entry_filings.settled', 'entry_filings.created_at', 'entry_filings.state', 'people.names as p_names', 'dependences.names as d_names')
+                        ->select('entry_filings.id', 'entry_filings.settled', 'entry_filings.created_at', 'entry_filings.state', 'dependences.names as p_names', 'dependences.names as d_names')
                         ->whereDate('entry_filings.created_at', [$this->fromDate])
                         ->where('entry_filings.state', 1);
       }

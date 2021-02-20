@@ -30,7 +30,7 @@ class EntryFiling extends Model
         'user_id',
         'campus_id',
         'priority_id',
-        'people_id',
+        'dependence_id',
         'type_document_id',
         'context_type_id'
     ];
@@ -52,7 +52,7 @@ class EntryFiling extends Model
         'user_id' => 'integer',
         'campus_id' => 'integer',
         'priority_id' => 'integer',
-        'people_id' => 'integer',
+        'dependence_id' => 'integer',
         'type_document_id' => 'integer',
         'context_type_id' => 'integer',
     ];
@@ -73,9 +73,9 @@ class EntryFiling extends Model
         return $this->belongsTo(\App\Priority::class);
     }
 
-    public function people()
+    public function dependence()
     {
-        return $this->belongsTo(\App\People::class);
+        return $this->belongsTo(\App\Dependence::class);
     }
 
     public function typeDocument()

@@ -83,7 +83,7 @@
               <tr>
                 <td>{{ $data->settled }}</td>
                 <td>{{ $data->created_at }}</td>
-                <td>{{ $data->people->names }}</td>
+                <td>{{ $data->dependence['names'] }}</td>
                 <td>{{ $item->names }}</td>
                 <td class="section_firm"></td>
              </tr>

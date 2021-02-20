@@ -8,8 +8,7 @@ use App\Company;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use App\OutgoingFiling;
-use App\OutgoingFilingHasPeople;
-use App\People;
+use App\OutgoingFilingHasDependence;
 use App\UpFile;
 use DateTime;
 use PDF;
@@ -44,7 +43,7 @@ class OutGoingFilingController extends Controller
       if ($request->fromDate && $request->toDate) {//retorna los datos que esten entre un rango de fechas especifico
         return OutgoingFiling::with(
           'upFiles',
-          'people',
+          'dependence',
           'TypeDocument:id,name',
           'ContextType:id,name',
           'dependence:id,names',
@@ -58,14 +57,13 @@ class OutGoingFilingController extends Controller
       //retorna los datos que tengan fecha de almacenamiento hoy
       return OutgoingFiling::with(
         'upFiles',
-        'people',
+        'dependence',
         'TypeDocument:id,name',
         'ContextType:id,name',
         'dependence:id,names',
         'Priority:id,name'
         )
         ->where('state', 1)
-        ->whereDate('created_at', now())
         ->get();
     }
 
@@ -107,12 +105,12 @@ class OutGoingFilingController extends Controller
         $data['user_id'] = Auth::user()->id;/* trae el usuario q esta autenticado */
         $outgoingFiling = OutgoingFiling::create($data);//Guarda la informacion del nuevo registro
 
-        $people = $request->people;//se recibe lo que se tiene en la propiedad data array dataOrden
+        $dependence = $request->dependence;//se recibe lo que se tiene en la propiedad data array dataOrden
         //recorro todos los elementos y los almaceno (todos los destinatarios del radicado)
-        foreach ($people as $key => $det) {
-          $info = new OutgoingFilingHasPeople();
+        foreach ($dependence as $key => $det) {
+          $info = new OutgoingFilingHasDependence();
           $info->outgoing_filing_id = $outgoingFiling->id;
-          $info->people_id = $det['id'];
+          $info->dependence_id = $det['id'];
           $info->save();//guarda la información
         }
         DB::commit(); //commit de la transaccion
@@ -153,7 +151,7 @@ class OutGoingFilingController extends Controller
         'dependence',
         'TypeDocument:id,name',
         'ContextType:id,name',
-        'People:id,names',
+        'dependences:id,names',
         'Priority:id,name'
       )->find($id);
     }
@@ -477,10 +475,10 @@ class OutGoingFilingController extends Controller
       if ($request->fromDate && $request->toDate) {//captura la información entre dos fechas especificas
         $outgoingFiling = OutgoingFiling::with(
           'upFiles',
-          'people',
+          'dependence',
           'TypeDocument:id,name',
           'ContextType:id,name',
-          'dependence:id,names',
+          'dependences:id,names',
           'Priority:id,name'
           )
           ->where('state', 1)
@@ -489,10 +487,10 @@ class OutGoingFilingController extends Controller
       }else{//captura la información de hoy
         $outgoingFiling = OutgoingFiling::with(
           'upFiles',
-          'people',
+          'dependence',
           'TypeDocument:id,name',
           'ContextType:id,name',
-          'dependence:id,names',
+          'dependences:id,names',
           'Priority:id,name'
           )
           ->where('state', 1)
@@ -520,25 +518,19 @@ class OutGoingFilingController extends Controller
     {
       if ($request->fromDate && $request->toDate) {
         return OutgoingFiling::Join ('dependences', 'outgoing_filings.dependence_id', '=', 'dependences.id')
-                        ->join('outgoing_filing_has_people', 'outgoing_filing_has_people.outgoing_filing_id', '=', 'outgoing_filings.id')
-                        ->join('people', 'people.id', '=', 'outgoing_filing_has_people.people_id')
+                        ->join('outgoing_filing_has_dependences', 'outgoing_filing_has_dependences.outgoing_filing_id', '=', 'outgoing_filings.id')
+                        ->join('dependence', 'dependence.id', '=', 'outgoing_filing_has_dependences.dependence_id')
                         ->join('type_documents', 'outgoing_filings.type_document_id', '=', 'type_documents.id')
-                        ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'people.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                        ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                         ->whereBetween('outgoing_filings.created_at', [$request->fromDate, $request->toDate])
                         ->where('outgoing_filings.state', 1)
                         ->get();
-        /* return OutgoingFiling::with(
-          'dependences',
-          'People:id,names'
-          )
-          ->where('state', 1)
-          ->whereBetween('created_at', [$request->fromDate, $request->toDate]); */
       } else {
         return OutgoingFiling::Join ('dependences', 'outgoing_filings.dependence_id', '=', 'dependences.id')
-                        ->join('outgoing_filing_has_people', 'outgoing_filing_has_people.outgoing_filing_id', '=', 'outgoing_filings.id')
-                        ->join('people', 'people.id', '=', 'outgoing_filing_has_people.people_id')
+                        ->join('outgoing_filing_has_dependences', 'outgoing_filing_has_dependences.outgoing_filing_id', '=', 'outgoing_filings.id')
+                        ->join('dependences', 'dependences.id', '=', 'outgoing_filing_has_dependences.dependence_id')
                         ->join('type_documents', 'outgoing_filings.type_document_id', '=', 'type_documents.id')
-                        ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'people.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
+                        ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'dependences.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                         ->whereDate('outgoing_filings.created_at', now())
                         ->where('outgoing_filings.state', 1)
                         ->get();

@@ -27,7 +27,6 @@ $factory->define(User::class, function (Faker $faker) {
         'remember_token' => Str::random(10),
         'firm' => $faker->text,
         'image' => $faker->text,
-        'people_id' => factory(\App\People::class),
         'dependence_id' => factory(\App\Dependence::class),
     ];
 });

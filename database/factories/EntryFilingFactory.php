@@ -22,7 +22,7 @@ $factory->define(EntryFiling::class, function (Faker $faker) {
         'user_id' => factory(\App\User::class),
         'campus_id' => factory(\App\Campus::class),
         'priority_id' => factory(\App\Priority::class),
-        'people_id' => factory(\App\People::class),
+        'dependence_id' => factory(\App\Dependence::class),
         'type_document_id' => factory(\App\TypeDocument::class),
         'context_type_id' => factory(\App\ContextType::class),
         'dependence_id' => factory(\App\Dependence::class),
