@@ -21,6 +21,7 @@ class Dependence extends Model
         'address',
         'state',
         'type',
+        'email',
         'attachments',
         'type_identification_id',
         'gender_id',
@@ -57,6 +58,11 @@ class Dependence extends Model
     public function gender()
     {
         return $this->belongsTo(\App\Gender::class);
+    }
+
+    public function typePerson()
+    {
+        return $this->belongsTo(\App\TypePeople::class, 'type');
     }
 
     public function user()
