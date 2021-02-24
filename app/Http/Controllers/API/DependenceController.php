@@ -27,9 +27,23 @@ class DependenceController extends Controller
         }else if ($request->active === '1') { //retorna la información con estado 1->activo
           return Dependence::where('state', 1)->with('typePerson')->orderBy('names', 'asc')->get();
         }else if ($request->active === '2') { //retorna toda la información activa y con tipo depencencia
-          return Dependence::where([['state', 1 ], [ 'type', 'dependence' ]])->with('typePerson')->orderBy('names', 'asc')->get();
+          return Dependence::with('typePerson')
+            ->whereHas('typePerson', function($query) {//condicion en la relación
+              //retorna las dependencias que son tipo entidad
+              $query->where('type_people.type', 0);
+            })
+            ->where([['state', 1 ]])
+            ->orderBy('names', 'asc')
+            ->get();
         }else if ($request->active === '3') { //retorna toda la información activa y con tipo persona
-          return Dependence::where([['state', 1 ], [ 'type', 'person' ]])->with('typePerson')->orderBy('names', 'asc')->get();
+          return Dependence::with('typePerson')
+            ->whereHas('typePerson', function($query) {//condicion en la relación
+              //retorna las dependencias que son tipo entidad
+              $query->where('type_people.type', 1);
+            })
+            ->where([['state', 1 ]])
+            ->orderBy('names', 'asc')
+            ->get();
         }
     }
 
