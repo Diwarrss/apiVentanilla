@@ -19,6 +19,7 @@ class Dependence extends Model
         'slug',
         'telephone',
         'address',
+        'email',
         'state',
         'type',
         'email',

@@ -38,7 +38,7 @@ class DependenceController extends Controller
         }else if ($request->active === '3') { //retorna toda la información activa y con tipo persona
           return Dependence::with('typePerson')
             ->whereHas('typePerson', function($query) {//condicion en la relación
-              //retorna las dependencias que son tipo entidad
+              //retorna las dependencias que son tipo persona
               $query->where('type_people.type', 1);
             })
             ->where([['state', 1 ]])
@@ -135,10 +135,10 @@ class DependenceController extends Controller
         $dependence->slug = ($request->type == 'dependence') ? Str::slug($request->names,'-') : null;
         $dependence->telephone = $request->telephone;
         $dependence->address = $request->address;
+        $dependence->email = $request->email;
         $dependence->state = $request->state;
         $dependence->type = $request->type;
         $dependence->attachments = $request->attachments;
-        $dependence->dependence_id = $request->dependence_id;
         $dependence->type_identification_id = $request->type_identification_id;
         $dependence->gender_id = $request->gender_id;
         //Guarda la informacion del registro

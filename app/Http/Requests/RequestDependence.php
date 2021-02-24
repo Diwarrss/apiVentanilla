@@ -28,6 +28,7 @@ class RequestDependence extends FormRequest
         'names' => 'required',
         'telephone' => 'nullable',
         'address' => 'nullable',
+        'email' => 'nullable',
         'state' => 'required',
         'type' => 'required'
       ];
