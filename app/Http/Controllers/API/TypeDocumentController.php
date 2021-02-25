@@ -109,6 +109,7 @@ class TypeDocumentController extends Controller
         $typeDocument->name = $request->name;
         $typeDocument->slug = Str::slug($request->name,'-');
         $typeDocument->state = $request->state;
+        $typeDocument->days = $request->days;
         $typeDocument->save();//Guarda la informacion del registro
 
         DB::commit(); //commit de la transaccion

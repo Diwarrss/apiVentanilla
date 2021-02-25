@@ -53,8 +53,8 @@ class SearchFilingController extends Controller
                 $query->where('entry_filing_has_dependences.dependence_id', $user)
                       ->orWhere('entry_filing_has_dependences.dependence_id', $userDependence);
               })
-              ->where('state', 1)
-              ->whereDate('created_at', now())
+              ->where('state', 1)/*
+              ->whereDate('created_at', now()) */
               ->get();
           }
         }else if ($request->type === "1") { //type=1 es para radicacion de entrada
@@ -81,8 +81,8 @@ class SearchFilingController extends Controller
               'Priority:id,name'
               )
               ->where('state', 1)
-              ->where('dependence_id', $user)
-              ->whereDate('created_at', now())
+              ->where('dependence_id', $user)/*
+              ->whereDate('created_at', now()) */
               ->get();
           }
         }

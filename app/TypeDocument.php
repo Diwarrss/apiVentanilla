@@ -17,6 +17,7 @@ class TypeDocument extends Model
       'name',
       'slug',
       'state',
+      'days',
       'user_id'
     ];
 
@@ -34,6 +35,7 @@ class TypeDocument extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'days' => 'integer',
         'state' => 'boolean',
     ];
 
