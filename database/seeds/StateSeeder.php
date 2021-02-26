@@ -22,6 +22,18 @@ class StateSeeder extends Seeder
           ],
           [
             'name' => 'Vencido'
+          ],
+          [
+            'name' => 'Entregado'
+          ],
+          [
+            'name' => 'Sin Respuesta'
+          ],
+          [
+            'name' => 'Contestado'
+          ],
+          [
+            'name' => 'Contestado Extemporaneo'
           ]
         ]
       );
