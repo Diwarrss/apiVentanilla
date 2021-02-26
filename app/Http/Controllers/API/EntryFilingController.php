@@ -48,7 +48,7 @@ class EntryFilingController extends Controller
         return EntryFiling::with(
           'upFiles',
           'dependences',
-          'TypeDocument:id,name',
+          'TypeDocument:id,name,days',
           'ContextType:id,name',
           'dependence:id,names',
           'Priority:id,name'
@@ -61,7 +61,7 @@ class EntryFilingController extends Controller
       return EntryFiling::with(
         'upFiles',
         'dependences',
-        'TypeDocument:id,name',
+        'TypeDocument:id,name,days',
         'ContextType:id,name',
         'dependence:id,names',
         'Priority:id,name'
@@ -153,7 +153,7 @@ class EntryFilingController extends Controller
       return EntryFiling::with(
         'upFiles',
         'dependences',
-        'TypeDocument:id,name',
+        'TypeDocument:id,name,days',
         'ContextType:id,name',
         'dependence:id,names',
         'Priority:id,name'
@@ -252,7 +252,7 @@ class EntryFilingController extends Controller
           'user_id' => Auth::user()->id
         ]);
 
-        $entry_filing->state = !$entry_filing->state; //cambia el estado del radicado
+        $entry_filing->state = 2; //cambia el estado del radicado
         $entry_filing->save(); //guarda el estado
 
         DB::commit(); //commit de la transaccion
@@ -484,7 +484,7 @@ class EntryFilingController extends Controller
                         ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
                         ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
                         ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'rem.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
-                        ->whereDate('entry_filings.created_at', now())
+                        /* ->whereDate('entry_filings.created_at', now()) */
                         ->where('entry_filings.state', 1)
                         ->get();
       }

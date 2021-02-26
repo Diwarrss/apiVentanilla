@@ -74,7 +74,7 @@ class EntryFilingExport implements FromQuery, WithHeadings, WithMapping, WithCol
                         ->join('entry_filing_has_dependences', 'entry_filing_has_dependences.entry_filing_id', '=', 'entry_filings.id')
                         ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
                         ->select('entry_filings.id', 'entry_filings.settled', 'entry_filings.created_at', 'entry_filings.state', 'dependences.names as p_names', 'dependences.names as d_names')
-                        ->whereDate('entry_filings.created_at', [$this->fromDate])
+                        /* ->whereDate('entry_filings.created_at', [$this->fromDate]) */
                         ->where('entry_filings.state', 1);
       }
     }

@@ -26,7 +26,7 @@ class SearchFilingController extends Controller
             return EntryFiling::with(
               'upFiles',
               'dependences',
-              'TypeDocument:id,name',
+              'TypeDocument:id,name,days',
               'ContextType:id,name',
               'dependence:id,names',
               'Priority:id,name'
@@ -43,7 +43,7 @@ class SearchFilingController extends Controller
             return EntryFiling::with(
               'upFiles',
               'dependences',
-              'TypeDocument:id,name',
+              'TypeDocument:id,name,days',
               'ContextType:id,name',
               'dependence:id,names',
               'Priority:id,name'
@@ -62,7 +62,7 @@ class SearchFilingController extends Controller
             return OutgoingFiling::with(
               'upFiles',
               'dependences',
-              'TypeDocument:id,name',
+              'TypeDocument:id,name,days',
               'ContextType:id,name',
               'dependence:id,names',
               'Priority:id,name'
@@ -75,7 +75,7 @@ class SearchFilingController extends Controller
             return OutgoingFiling::with(
               'upFiles',
               'dependences',
-              'TypeDocument:id,name',
+              'TypeDocument:id,name,days',
               'ContextType:id,name',
               'dependence:id,names',
               'Priority:id,name'
