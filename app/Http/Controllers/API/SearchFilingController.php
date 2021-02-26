@@ -23,67 +23,135 @@ class SearchFilingController extends Controller
         $userDependence = Auth::user()->dependence_id;
         if ($request->type === "0") { //type=0 es para radicacion de entrada
           if ($request->fromDate && $request->toDate) {//retorna l a información que este en dos rangos de fecha especificos
-            return EntryFiling::with(
-              'upFiles',
-              'dependences',
-              'TypeDocument:id,name,days',
-              'ContextType:id,name',
-              'dependence:id,names',
-              'Priority:id,name'
-              )
-              ->whereHas('dependences', function($query) use ($user, $userDependence)  {//condicion en la relación
-                //retorna los radicados que tienen como destinatario al usuario a a la dependencia a la que pertenece
-                $query->where('entry_filing_has_dependences.dependence_id', $user)
-                      ->orWhere('entry_filing_has_dependences.dependence_id', $userDependence);
-              })
-              ->where('state', '!=', 2)
-              ->whereBetween('created_at', [$request->fromDate, $request->toDate])
-              ->get();
+            if ($request->state) {
+              return EntryFiling::with(
+                'upFiles',
+                'dependences',
+                'TypeDocument:id,name,days',
+                'ContextType:id,name',
+                'dependence:id,names',
+                'Priority:id,name'
+                )
+                ->whereHas('dependences', function($query) use ($user, $userDependence)  {//condicion en la relación
+                  //retorna los radicados que tienen como destinatario al usuario a a la dependencia a la que pertenece
+                  $query->where('entry_filing_has_dependences.dependence_id', $user)
+                        ->orWhere('entry_filing_has_dependences.dependence_id', $userDependence);
+                })
+                ->where('state', $request->state)
+                ->whereBetween('created_at', [$request->fromDate, $request->toDate])
+                ->get();
+            } else {
+              return EntryFiling::with(
+                'upFiles',
+                'dependences',
+                'TypeDocument:id,name,days',
+                'ContextType:id,name',
+                'dependence:id,names',
+                'Priority:id,name'
+                )
+                ->whereHas('dependences', function($query) use ($user, $userDependence)  {//condicion en la relación
+                  //retorna los radicados que tienen como destinatario al usuario a a la dependencia a la que pertenece
+                  $query->where('entry_filing_has_dependences.dependence_id', $user)
+                        ->orWhere('entry_filing_has_dependences.dependence_id', $userDependence);
+                })
+                ->where('state', '!=', 2)
+                ->whereBetween('created_at', [$request->fromDate, $request->toDate])
+                ->get();
+            }
           } else {//retorna l a información que este tenga fecha de hoy
-            return EntryFiling::with(
-              'upFiles',
-              'dependences',
-              'TypeDocument:id,name,days',
-              'ContextType:id,name',
-              'dependence:id,names',
-              'Priority:id,name'
-              )
-              ->whereHas('dependences', function($query) use ($user, $userDependence)  {//condicion en la relación
-                //retorna los radicados que tienen como destinatario al usuario a a la dependencia a la que pertenece
-                $query->where('entry_filing_has_dependences.dependence_id', $user)
-                      ->orWhere('entry_filing_has_dependences.dependence_id', $userDependence);
-              })
-              ->where('state', '!=', 2)/*
-              ->whereDate('created_at', now()) */
-              ->get();
+            if ($request->state) {
+              return EntryFiling::with(
+                'upFiles',
+                'dependences',
+                'TypeDocument:id,name,days',
+                'ContextType:id,name',
+                'dependence:id,names',
+                'Priority:id,name'
+                )
+                ->whereHas('dependences', function($query) use ($user, $userDependence)  {//condicion en la relación
+                  //retorna los radicados que tienen como destinatario al usuario a a la dependencia a la que pertenece
+                  $query->where('entry_filing_has_dependences.dependence_id', $user)
+                        ->orWhere('entry_filing_has_dependences.dependence_id', $userDependence);
+                })
+                ->where('state', $request->state)/*
+                ->whereDate('created_at', now()) */
+                ->get();
+            } else {
+              return EntryFiling::with(
+                'upFiles',
+                'dependences',
+                'TypeDocument:id,name,days',
+                'ContextType:id,name',
+                'dependence:id,names',
+                'Priority:id,name'
+                )
+                ->whereHas('dependences', function($query) use ($user, $userDependence)  {//condicion en la relación
+                  //retorna los radicados que tienen como destinatario al usuario a a la dependencia a la que pertenece
+                  $query->where('entry_filing_has_dependences.dependence_id', $user)
+                        ->orWhere('entry_filing_has_dependences.dependence_id', $userDependence);
+                })
+                ->where('state', '!=', 2)/*
+                ->whereDate('created_at', now()) */
+                ->get();
+            }
           }
         }else if ($request->type === "1") { //type=1 es para radicacion de entrada
           if ($request->fromDate && $request->toDate) {//retorna l a información que este en dos rangos de fecha especificos
-            return OutgoingFiling::with(
-              'upFiles',
-              'dependences',
-              'TypeDocument:id,name,days',
-              'ContextType:id,name',
-              'dependence:id,names',
-              'Priority:id,name'
-              )
-              ->where('state', 1)
-              ->where('dependence_id', $user)
-              ->whereBetween('created_at', [$request->fromDate, $request->toDate])
-              ->get();
+            if ($request->state) {
+              return OutgoingFiling::with(
+                'upFiles',
+                'dependences',
+                'TypeDocument:id,name,days',
+                'ContextType:id,name',
+                'dependence:id,names',
+                'Priority:id,name'
+                )
+                ->where('state', $request->state)
+                ->where('dependence_id', $user)
+                ->whereBetween('created_at', [$request->fromDate, $request->toDate])
+                ->get();
+            } else {
+              return OutgoingFiling::with(
+                'upFiles',
+                'dependences',
+                'TypeDocument:id,name,days',
+                'ContextType:id,name',
+                'dependence:id,names',
+                'Priority:id,name'
+                )
+                ->where('state', '!=', 2)
+                ->where('dependence_id', $user)
+                ->whereBetween('created_at', [$request->fromDate, $request->toDate])
+                ->get();
+            }
           } else {//retorna l a información que tenga fecha de hoy
-            return OutgoingFiling::with(
-              'upFiles',
-              'dependences',
-              'TypeDocument:id,name,days',
-              'ContextType:id,name',
-              'dependence:id,names',
-              'Priority:id,name'
-              )
-              ->where('state', 1)
-              ->where('dependence_id', $user)/*
-              ->whereDate('created_at', now()) */
-              ->get();
+            if ($request->state) {
+              return OutgoingFiling::with(
+                'upFiles',
+                'dependences',
+                'TypeDocument:id,name,days',
+                'ContextType:id,name',
+                'dependence:id,names',
+                'Priority:id,name'
+                )
+                ->where('state', $request->state)
+                ->where('dependence_id', $user)/*
+                ->whereDate('created_at', now()) */
+                ->get();
+            } else {
+              return OutgoingFiling::with(
+                'upFiles',
+                'dependences',
+                'TypeDocument:id,name,days',
+                'ContextType:id,name',
+                'dependence:id,names',
+                'Priority:id,name'
+                )
+                ->where('state', '!=', 2)
+                ->where('dependence_id', $user)/*
+                ->whereDate('created_at', now()) */
+                ->get();
+            }
           }
         }
       } else { //es el endpoint de buscar radicados
