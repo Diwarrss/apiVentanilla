@@ -36,7 +36,7 @@ class SearchFilingController extends Controller
                 $query->where('entry_filing_has_dependences.dependence_id', $user)
                       ->orWhere('entry_filing_has_dependences.dependence_id', $userDependence);
               })
-              ->where('state', 1)
+              ->where('state', '!=', 2)
               ->whereBetween('created_at', [$request->fromDate, $request->toDate])
               ->get();
           } else {//retorna l a información que este tenga fecha de hoy
@@ -53,7 +53,7 @@ class SearchFilingController extends Controller
                 $query->where('entry_filing_has_dependences.dependence_id', $user)
                       ->orWhere('entry_filing_has_dependences.dependence_id', $userDependence);
               })
-              ->where('state', 1)/*
+              ->where('state', '!=', 2)/*
               ->whereDate('created_at', now()) */
               ->get();
           }
