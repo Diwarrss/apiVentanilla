@@ -193,7 +193,7 @@ class SearchFilingController extends Controller
               'Priority:id,name'
               )
               ->where('settled', $request->setledSearch)
-              ->where('state', 1)
+              ->where('state', '!=', 2)
               ->get();
           }
           if ($request->addressee) {
@@ -211,7 +211,7 @@ class SearchFilingController extends Controller
                   $query->where('entry_filing_has_dependences.dependence_id', $addressee_id);
                 })
                 ->where($matchThese)
-                ->where('state', 1)
+                ->where('state', '!=', 2)
                 ->whereBetween('created_at', [$request->fromDate, $request->toDate])
                 /* ->whereBetween('created_at', [$request->fromDate." 00:00:00", $request->toDate." 23:59:59"]) */
                 ->get();
@@ -228,7 +228,7 @@ class SearchFilingController extends Controller
                   $query->where('entry_filing_has_dependences.dependence_id', $addressee_id);
                 })
                 ->where($matchThese)
-                ->where('state', 1)
+                ->where('state', '!=', 2)
                 /* ->whereBetween('created_at', [$request->fromDate, $request->toDate]) */
                 /* ->whereBetween('created_at', [$request->fromDate." 00:00:00", $request->toDate." 23:59:59"]) */
                 ->get();
@@ -246,7 +246,7 @@ class SearchFilingController extends Controller
                 'Priority:id,name'
                 )
                 ->where($matchThese)
-                ->where('state', 1)
+                ->where('state', '!=', 2)
                 ->whereBetween('created_at', [$request->fromDate, $request->toDate])
                 ->get();
             } else {
@@ -259,7 +259,7 @@ class SearchFilingController extends Controller
                 'Priority:id,name'
                 )
                 ->where($matchThese)
-                ->where('state', 1)
+                ->where('state', '!=', 2)
                 /* ->whereDate('created_at', now()) */
                 ->get();
             }
@@ -275,7 +275,7 @@ class SearchFilingController extends Controller
               'Priority:id,name'
               )
               ->where($matchThese)
-              ->where('state', 1)
+              ->where('state', '!=', 2)
               ->whereBetween('created_at', [$request->fromDate, $request->toDate])
               ->get();
           } else {
@@ -288,7 +288,7 @@ class SearchFilingController extends Controller
               'Priority:id,name'
               )
               ->where($matchThese)
-              ->where('state', 1)
+              ->where('state', '!=', 2)
               ->whereDate('created_at', now())
               ->get();
           }
@@ -303,7 +303,7 @@ class SearchFilingController extends Controller
               'dependence:id,names',
               'Priority:id,name'
               )
-              ->where('state', 1)
+              ->where('state', '!=', 2)
               ->where('settled', $request->setledSearch)
               ->get();
           }
@@ -322,7 +322,7 @@ class SearchFilingController extends Controller
                   $query->where('outgoing_filing_has_dependences.dependence_id', $addressee_id);
                 })
                 ->where($matchThese)
-                ->where('state', 1)
+                ->where('state', '!=', 2)
                 ->whereBetween('created_at', [$request->fromDate, $request->toDate])
                 ->get();
             } else {
@@ -338,7 +338,7 @@ class SearchFilingController extends Controller
                   $query->where('outgoing_filing_has_dependences.dependence_id', $addressee_id);
                 })
                 ->where($matchThese)
-                ->where('state', 1)
+                ->where('state', '!=', 2)
                 /* ->whereBetween('created_at', [$request->fromDate, $request->toDate]) */
                 ->get();
             }
@@ -355,7 +355,7 @@ class SearchFilingController extends Controller
                 'Priority:id,name'
                 )
                 ->where($matchThese)
-                ->where('state', 1)
+                ->where('state', '!=', 2)
                 ->whereBetween('created_at', [$request->fromDate, $request->toDate])
                 ->get();
             } else {
@@ -368,7 +368,7 @@ class SearchFilingController extends Controller
                 'Priority:id,name'
                 )
                 ->where($matchThese)
-                ->where('state', 1)
+                ->where('state', '!=', 2)
                 /* ->whereDate('created_at', now()) */
                 ->get();
             }
@@ -384,7 +384,7 @@ class SearchFilingController extends Controller
               'Priority:id,name'
               )
               ->where($matchThese)
-              ->where('state', 1)
+              ->where('state', '!=', 2)
               ->whereBetween('created_at', [$request->fromDate, $request->toDate])
               ->get();
           } else {
@@ -397,7 +397,7 @@ class SearchFilingController extends Controller
               'Priority:id,name'
               )
               ->where($matchThese)
-              ->where('state', 1)
+              ->where('state', '!=', 2)
               ->whereDate('created_at', now())
               ->get();
           }
@@ -486,7 +486,7 @@ class SearchFilingController extends Controller
                           ->join('dependences', 'dependences.id', '=', 'entry_filing_has_dependences.dependence_id')
                           ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
                           ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'rem.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
-                          ->where('entry_filings.state', 1)
+                          ->where('entry_filings.state', '!=', 2)
                           ->where('settled', $request->setledSearch)
                           ->get();
         }
@@ -500,7 +500,7 @@ class SearchFilingController extends Controller
                           ->whereBetween('entry_filings.created_at', [$request->fromDate, $request->toDate])
                           ->where('entry_filing_has_dependences.dependence_id', $addressee_id)
                           ->where($matchThese)
-                          ->where('entry_filings.state', 1)
+                          ->where('entry_filings.state', '!=', 2)
                           ->get();
           } else {
             return EntryFiling::Join ('dependences as rem', 'entry_filings.dependence_id', '=', 'rem.id')
@@ -511,7 +511,7 @@ class SearchFilingController extends Controller
                           /* ->whereBetween('entry_filings.created_at', [$request->fromDate, $request->toDate]) */
                           ->where('entry_filing_has_dependences.dependence_id', $addressee_id)
                           ->where($matchThese)
-                          ->where('entry_filings.state', 1)
+                          ->where('entry_filings.state', '!=', 2)
                           ->get();
           }
         }
@@ -523,7 +523,7 @@ class SearchFilingController extends Controller
                           ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
                           ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'rem.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->whereBetween('entry_filings.created_at', [$request->fromDate, $request->toDate])
-                          ->where('entry_filings.state', 1)
+                          ->where('entry_filings.state', '!=', 2)
                           ->where($matchThese)
                           ->get();
           } else {
@@ -533,7 +533,7 @@ class SearchFilingController extends Controller
                           ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
                           ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'rem.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           //->whereBetween('entry_filings.created_at', [$request->fromDate, $request->toDate])
-                          ->where('entry_filings.state', 1)
+                          ->where('entry_filings.state', '!=', 2)
                           ->where($matchThese)
                           ->get();
           }
@@ -545,7 +545,7 @@ class SearchFilingController extends Controller
                           ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
                           ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'rem.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->whereBetween('entry_filings.created_at', [$request->fromDate, $request->toDate])
-                          ->where('entry_filings.state', 1)
+                          ->where('entry_filings.state', '!=', 2)
                           ->get();
         } else {
           return EntryFiling::Join ('dependences as rem', 'entry_filings.dependence_id', '=', 'rem.id')
@@ -554,7 +554,7 @@ class SearchFilingController extends Controller
                           ->join('type_documents', 'entry_filings.type_document_id', '=', 'type_documents.id')
                           ->select('entry_filings.id as ID', 'entry_filings.settled as Radicado', 'entry_filings.created_at as Fecha', DB::raw("(CASE entry_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'entry_filings.title as Titulo', 'entry_filings.subject as Asunto', 'entry_filings.folios as Folios', 'entry_filings.annexes as Anexos', 'rem.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE entry_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->whereDate('entry_filings.created_at', now())
-                          ->where('entry_filings.state', 1)
+                          ->where('entry_filings.state', '!=', 2)
                           ->get();
         }
       } else if ($request->type === "1") { //type=1 es para radicacion de salida
@@ -566,7 +566,7 @@ class SearchFilingController extends Controller
                           ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'rem.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           //->whereBetween('outgoing_filings.created_at', [$request->fromDate, $request->toDate])
                           ->where('settled', $request->setledSearch)
-                          ->where('outgoing_filings.state', 1)
+                          ->where('outgoing_filings.state', '!=', 2)
                           ->get();
         }
         if ($request->addressee) {
@@ -580,7 +580,7 @@ class SearchFilingController extends Controller
                           ->whereBetween('outgoing_filings.created_at', [$request->fromDate, $request->toDate])
                           ->where('outgoing_filing_has_dependences.dependence_id', $addressee_id)
                           ->where($matchThese)
-                          ->where('outgoing_filings.state', 1)
+                          ->where('outgoing_filings.state', '!=', 2)
                           ->get();
           } else {
             return OutgoingFiling::Join ('dependences as rem', 'outgoing_filings.dependence_id', '=', 'rem.id')
@@ -591,7 +591,7 @@ class SearchFilingController extends Controller
                           //->whereBetween('outgoing_filings.created_at', [$request->fromDate, $request->toDate])
                           ->where('outgoing_filing_has_dependences.dependence_id', $addressee_id)
                           ->where($matchThese)
-                          ->where('outgoing_filings.state', 1)
+                          ->where('outgoing_filings.state', '!=', 2)
                           ->get();
           }
         }
@@ -605,7 +605,7 @@ class SearchFilingController extends Controller
                           ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'rem.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->whereBetween('outgoing_filings.created_at', [$request->fromDate, $request->toDate])
                           ->where($matchThese)
-                          ->where('outgoing_filings.state', 1)
+                          ->where('outgoing_filings.state', '!=', 2)
                           ->get();
           } else {
             return OutgoingFiling::Join ('dependences as rem', 'outgoing_filings.dependence_id', '=', 'rem.id')
@@ -615,7 +615,7 @@ class SearchFilingController extends Controller
                           ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'rem.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           //->whereBetween('outgoing_filings.created_at', [$request->fromDate, $request->toDate])
                           ->where($matchThese)
-                          ->where('outgoing_filings.state', 1)
+                          ->where('outgoing_filings.state', '!=', 2)
                           ->get();
           }
         }
@@ -626,7 +626,7 @@ class SearchFilingController extends Controller
                           ->join('type_documents', 'outgoing_filings.type_document_id', '=', 'type_documents.id')
                           ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'rem.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->whereBetween('outgoing_filings.created_at', [$request->fromDate, $request->toDate])
-                          ->where('outgoing_filings.state', 1)
+                          ->where('outgoing_filings.state', '!=', 2)
                           ->get();
         } else {
           return OutgoingFiling::Join ('dependences as rem', 'outgoing_filings.dependence_id', '=', 'rem.id')
@@ -635,7 +635,7 @@ class SearchFilingController extends Controller
                           ->join('type_documents', 'outgoing_filings.type_document_id', '=', 'type_documents.id')
                           ->select('outgoing_filings.id as ID', 'outgoing_filings.settled as Radicado', 'outgoing_filings.created_at as Fecha', DB::raw("(CASE outgoing_filings.state WHEN 1 THEN 'Activo' ELSE 'Inactivo' END) AS Estado"), 'outgoing_filings.title as Titulo', 'outgoing_filings.subject as Asunto', 'outgoing_filings.folios as Folios', 'outgoing_filings.annexes as Anexos', 'rem.names as Remitente', 'dependences.names as Destinatario', DB::raw("(CASE outgoing_filings.access_level WHEN 'public' THEN 'PÚBLICO' ELSE 'RESTRINGIDO' END) AS Nivel_Acceso"), 'type_documents.name as Tipo_Documento')
                           ->whereDate('outgoing_filings.created_at', now())
-                          ->where('outgoing_filings.state', 1)
+                          ->where('outgoing_filings.state', '!=', 2)
                           ->get();
         }
       }
