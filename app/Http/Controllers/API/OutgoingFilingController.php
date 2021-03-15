@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Audit;
 use App\canceledOutgoingFiling;
 use App\Company;
+use App\EntryFiling;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use App\OutgoingFiling;
@@ -113,6 +114,19 @@ class OutGoingFilingController extends Controller
           $info->dependence_id = $det['id'];
           $info->save();//guarda la información
         }
+
+        if ($request->entry_filing_id) {
+          $entry_filing = EntryFiling::find($request->entry_filing_id);
+          if ($entry_filing->state == 1) {
+            $entry_filing->state = 6;
+          }
+          if ($entry_filing->state == 3) {
+            $entry_filing->state = 7;
+          }
+
+          $entry_filing->save();
+        }
+
         DB::commit(); //commit de la transaccion
 
         if ($outgoingFiling) {//respuesta exitosa

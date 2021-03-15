@@ -31,7 +31,8 @@ class OutgoingFiling extends Model
         'priority_id',
         'type_document_id',
         'context_type_id',
-        'dependence_id'
+        'dependence_id',
+        'entry_filing_id'
     ];
 
     /**

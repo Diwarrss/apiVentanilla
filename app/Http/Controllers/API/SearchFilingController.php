@@ -24,6 +24,11 @@ class SearchFilingController extends Controller
         if ($request->type === "0") { //type=0 es para radicacion de entrada
           if ($request->fromDate && $request->toDate) {//retorna l a información que este en dos rangos de fecha especificos
             if ($request->state) {
+              /* $states = [];
+              foreach ($request->state as $valor) {
+                $camp = ['state', '=', "$valor"];
+                array_push($states, $camp);
+              } */
               return EntryFiling::with(
                 'upFiles',
                 'dependences',
@@ -37,7 +42,7 @@ class SearchFilingController extends Controller
                   $query->where('entry_filing_has_dependences.dependence_id', $user)
                         ->orWhere('entry_filing_has_dependences.dependence_id', $userDependence);
                 })
-                ->where('state', $request->state)
+                ->whereIn('state', $request->state)
                 ->whereBetween('created_at', [$request->fromDate, $request->toDate])
                 ->get();
             } else {
@@ -60,6 +65,11 @@ class SearchFilingController extends Controller
             }
           } else {//retorna l a información que este tenga fecha de hoy
             if ($request->state) {
+              /* $states = [];
+              foreach ($request->state as $valor) {
+                $camp = ['state', '=', "$valor"];
+                array_push($states, $camp);
+              } */
               return EntryFiling::with(
                 'upFiles',
                 'dependences',
@@ -73,7 +83,7 @@ class SearchFilingController extends Controller
                   $query->where('entry_filing_has_dependences.dependence_id', $user)
                         ->orWhere('entry_filing_has_dependences.dependence_id', $userDependence);
                 })
-                ->where('state', $request->state)/*
+                ->whereIn('state', $request->state)/*
                 ->whereDate('created_at', now()) */
                 ->get();
             } else {
@@ -95,9 +105,14 @@ class SearchFilingController extends Controller
                 ->get();
             }
           }
-        }else if ($request->type === "1") { //type=1 es para radicacion de entrada
+        }else if ($request->type === "1") { //type=1 es para radicacion de salida
           if ($request->fromDate && $request->toDate) {//retorna l a información que este en dos rangos de fecha especificos
             if ($request->state) {
+              /* $states = [];
+              foreach ($request->state as $valor) {
+                $camp = ['state', '=', "$valor"];
+                array_push($states, $camp);
+              } */
               return OutgoingFiling::with(
                 'upFiles',
                 'dependences',
@@ -106,7 +121,7 @@ class SearchFilingController extends Controller
                 'dependence:id,names',
                 'Priority:id,name'
                 )
-                ->where('state', $request->state)
+                ->whereIn('state', $request->state)
                 ->where('dependence_id', $user)
                 ->whereBetween('created_at', [$request->fromDate, $request->toDate])
                 ->get();
@@ -126,6 +141,11 @@ class SearchFilingController extends Controller
             }
           } else {//retorna l a información que tenga fecha de hoy
             if ($request->state) {
+              /* $states = [];
+              foreach ($request->state as $valor) {
+                $camp = ['state', '=', "$valor"];
+                array_push($states, $camp);
+              } */
               return OutgoingFiling::with(
                 'upFiles',
                 'dependences',
@@ -134,7 +154,7 @@ class SearchFilingController extends Controller
                 'dependence:id,names',
                 'Priority:id,name'
                 )
-                ->where('state', $request->state)
+                ->whereIn('state', $request->state)
                 ->where('dependence_id', $user)/*
                 ->whereDate('created_at', now()) */
                 ->get();
