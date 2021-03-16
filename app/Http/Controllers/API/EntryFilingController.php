@@ -51,7 +51,8 @@ class EntryFilingController extends Controller
           'TypeDocument:id,name,days',
           'ContextType:id,name',
           'dependence:id,names',
-          'Priority:id,name'
+          'Priority:id,name',
+          'outgoingFiling'
           )
           ->where('state', '!=', 2)
           ->whereBetween('created_at', [$request->fromDate, $request->toDate])
@@ -64,7 +65,8 @@ class EntryFilingController extends Controller
         'TypeDocument:id,name,days',
         'ContextType:id,name',
         'dependence:id,names',
-        'Priority:id,name'
+        'Priority:id,name',
+        'outgoingFiling'
         )
         ->where('state', '!=', 2)
         ->get();

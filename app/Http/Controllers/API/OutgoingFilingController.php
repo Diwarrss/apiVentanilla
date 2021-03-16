@@ -48,7 +48,8 @@ class OutGoingFilingController extends Controller
           'TypeDocument:id,name',
           'ContextType:id,name',
           'dependence:id,names',
-          'Priority:id,name'
+          'Priority:id,name',
+          'entryFiling'
           )
           ->where('state', '!=', 2)
           ->whereBetween('created_at', [$request->fromDate, $request->toDate])
@@ -62,7 +63,8 @@ class OutGoingFilingController extends Controller
         'TypeDocument:id,name',
         'ContextType:id,name',
         'dependence:id,names',
-        'Priority:id,name'
+        'Priority:id,name',
+        'entryFiling'
         )
         ->where('state', '!=', 2)
         ->get();

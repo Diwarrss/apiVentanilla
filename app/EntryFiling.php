@@ -97,4 +97,9 @@ class EntryFiling extends Model
     {
         return $this->morphMany(\App\UpFile::class, 'fileable');
     }
+
+    public function outgoingFiling()
+    {
+        return $this->belongsTo(\App\OutgoingFiling::class, 'id', 'entry_filing_id');
+    }
 }
