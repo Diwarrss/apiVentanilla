@@ -158,7 +158,8 @@ class EntryFilingController extends Controller
         'TypeDocument:id,name,days',
         'ContextType:id,name',
         'dependence:id,names',
-        'Priority:id,name'
+        'Priority:id,name',
+        'outgoingFiling'
       )->find($id);
     }
 

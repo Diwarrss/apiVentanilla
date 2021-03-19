@@ -164,11 +164,12 @@ class OutGoingFilingController extends Controller
     {//retorna la información especifica por ID de la base de datos
       return OutgoingFiling::with(
         'upFiles',
-        'dependence',
+        'dependences',
         'TypeDocument:id,name',
         'ContextType:id,name',
-        'dependences:id,names',
-        'Priority:id,name'
+        'dependence:id,names',
+        'Priority:id,name',
+        'entryFiling'
       )->find($id);
     }
 
