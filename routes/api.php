@@ -81,6 +81,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('template-outgoing-filing', 'API\OutgoingFilingController@generateTemplate');
     Route::get('outgoingfiling/export', 'API\OutgoingFilingController@export'); //export xlsx
 
+    //InternalFilingController
+    Route::apiResource('internal-filing', 'API\InternalFilingController');
+    Route::post('internal-filing-cancel/{id}', 'API\InternalFilingController@cancelFiling');
+    Route::post('internal-filing/upload-temp-files', 'API\InternalFilingController@uploadTempFiles');
+    Route::post('internal-filing/upload-guide', 'API\InternalFilingController@uploadTempFilesGuide');
+    Route::post('internal-filing/delete-files/{id}', 'API\InternalFilingController@deleteFile');
+    //Route::get('internal-filing/download-files/{id}', 'API\InternalFilingController@downloadFile');
+    Route::get('template-internal-filing', 'API\InternalFilingController@generateTemplate');
+    Route::get('internalfiling/export', 'API\InternalFilingController@export'); //export xlsx
+
     //RolHasPermissionController, PermisionController and RolController
     Route::apiResource('all-rol', 'API\RolController');
     Route::apiResource('all-permissions', 'API\PermisionController');
